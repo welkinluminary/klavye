@@ -341,275 +341,275 @@
     ];
 
     // 2. Aşama: 30 Kör Senaryo Sorusu
-    const STAGE2_QUESTIONS = [
+  const STAGE2_QUESTIONS = [
       {
         id: 1,
-        text: 'Konser mekanı merdivenli bir ikinci katta ve asansör yok. Mekana girerken içinden geçen ilk cümle ne olur?',
+        text: "Okulda provadan çıktın, Güney yokuşunu çıkacaksın ve araba yok. Yokuşu tırmanırken içinden geçen ilk cümle ne olur?",
         options: [
-          { key: 'A', text: 'Tek elimde alet, diğer elimde kahvemle iki saniyede çıkarım, dert değil.', target: 'N', reason: 'Hafifliği ve tek elle taşınabilirliği önemsedin.' },
-          { key: 'B', text: 'Biraz terlerim ama tek başıma hallederim, yeter ki elimdeki alet sağlam olsun.', target: 'M', reason: 'Orta-ağır olsa da sağlam ve dengeli bir kasayı tercih ettin.' },
-          { key: 'C', text: 'Grup arkadaşlarıma seslenirim; iki kişi ucundan tutarız, o devasa kasa yukarı çıkacak!', target: 'K', reason: 'Ağırlığı göze alıp en kapsamlı donanımı seçtin.' }
+          { key: 'A', text: "Tek elimde alet, diğer elimde kahvemle sırıta sırıta çıkarım, yokuş vız gelir.", target: 'N', reason: "Hafifliği ve tek elle taşınabilirliği önemsedin." },
+          { key: 'B', text: "Biraz nefes nefese kalırım ama tek başıma hallederim, yeter ki elimdeki alet sağlam olsun.", target: 'M', reason: "Orta-ağır olsa da sağlam ve dengeli bir kasayı tercih ettin." },
+          { key: 'C', text: "'Şu klavyeyi aldığım güne...' diye söylenip Sema'ya seslenirim, iki kişi ucundan tutarız!", target: 'K', reason: "Ağırlığı göze alıp en kapsamlı donanımı seçtin." }
         ]
       },
       {
         id: 2,
-        text: 'Bir müzik aleti alıyorsun ama satıcı çok iyi bir fiyat vermiş, tek şartı şehirden 200 km uzağa gidip elden alman.',
+        text: "Bir müzik aleti alıyorsun ama satıcı çok iyi bir fiyat vermiş, tek şartı şehirden 200 km uzağa gidip elden alman.",
         options: [
-          { key: 'A', text: '200 km ne ki? Atlar giderim, o fırsat kaçmaz.', target: 'M', reason: 'İyi fiyat için 200 km yol gitmeyi göze aldın.' },
-          { key: 'B', text: 'Yola gitmeye üşenirim, şehrin içinde veya yakın çevrede olsun, gerekirse biraz daha fazla veririm.', target: 'N', reason: 'Uzak yol yerine şehir içi veya kargo rahatlığını seçtin.' },
-          { key: 'C', text: 'Eğer yanında sağlam bir taşıma çantası/hardcase de veriyorsa yakın çevreye kesin giderim.', target: 'K', reason: 'Yakın konum ve yanında orijinal case olmasını büyük avantaj gördün.' }
+          { key: 'A', text: "200 km ne ki? Atlar giderim, o fırsat kaçmaz.", target: 'M', reason: "İyi fiyat için 200 km yol gitmeyi göze aldın." },
+          { key: 'B', text: "Yola gitmeye üşenirim, şehrin içinde veya yakın çevrede olsun, gerekirse biraz daha fazla veririm.", target: 'N', reason: "Uzak yol yerine şehir içi veya kargo rahatlığını seçtin." },
+          { key: 'C', text: "Eğer yanında sağlam bir taşıma çantası/hardcase de veriyorsa yakın çevreye kesin giderim.", target: 'K', reason: "Yakın konum ve yanında orijinal case olmasını büyük avantaj gördün." }
         ]
       },
       {
         id: 3,
-        text: 'Hayalindeki enstrümanı aldın ama yanında taşıma kılıfı yok. Ekstra 150–200 € daha harcaman gerekiyor.',
+        text: "Hayalindeki enstrümanı aldın ama yanında taşıma kılıfı yok. Ekstra 150–200 € daha harcaman gerekiyor.",
         options: [
-          { key: 'A', text: 'Aletin kendisi uygun fiyata geldiyse kılıfı kendim seçip almak bana hiç koymaz.', target: 'M', reason: 'Uygun fiyatlı cihaz için ekstra kılıf masrafını sorun etmedin.' },
-          { key: 'B', text: 'Hiç uğraşamam, her şey dahil, kutusu/case\'i hazır paket olsun.', target: 'K', reason: 'Ekstra masrafsız, orijinal hardcase dahil hazır paketi istedin.' },
-          { key: 'C', text: 'Zaten hafif bir şeyse yumuşak bir sırt çantasıyla bile taşırım, çok masraf çıkmaz.', target: 'N', reason: 'Hafif cihazla pratik taşımayı tercih ettin.' }
+          { key: 'A', text: "Aletin kendisi uygun fiyata geldiyse kılıfı kendim seçip almak bana hiç koymaz.", target: 'M', reason: "Uygun fiyatlı cihaz için ekstra kılıf masrafını sorun etmedin." },
+          { key: 'B', text: "Hiç uğraşamam, her şey dahil, kutusu/case'i hazır paket olsun.", target: 'K', reason: "Ekstra masrafsız, orijinal hardcase dahil hazır paketi istedin." },
+          { key: 'C', text: "Zaten hafif bir şeyse yumuşak bir sırt çantasıyla bile taşırım, çok masraf çıkmaz.", target: 'N', reason: "Hafif cihazla pratik taşımayı tercih ettin." }
         ]
       },
       {
         id: 4,
-        text: 'Konserin en heyecanlı yerinde mekanın elektrikleri 3 saniyeliğine gidip geldi!',
+        text: "Konserin en heyecanlı yerinde mekanın elektrikleri 3 saniyeliğine gidip geldi!",
         options: [
-          { key: 'A', text: 'Sorun yok, 5-10 saniye içinde tekrar çalmaya devam ederim.', target: 'M', reason: 'Sahnede hızlı açılma süresine önem verdin.' },
-          { key: 'B', text: 'Elektrik gelir gelmez anında ses vermeli, 1 saniye bile bekleyemem.', target: 'N', reason: 'Anında açılan, sıfır gecikmeli bir sahne cihazı istedin.' },
-          { key: 'C', text: 'Gerekirse sahnede ufak bir güç kaynağı (UPS) taşırım ama açılması 1-2 dakika sürse de o ses kalitesinden vazgeçmem.', target: 'K', reason: '1-2 dakikalık açılış süresini ses motoru gücü uğruna kabul ettin.' }
+          { key: 'A', text: "Sorun yok, 5-10 saniye içinde tekrar çalmaya devam ederim.", target: 'M', reason: "Sahnede hızlı açılma süresine önem verdin." },
+          { key: 'B', text: "Elektrik gelir gelmez anında ses vermeli, 1 saniye bile bekleyemem.", target: 'N', reason: "Anında açılan, sıfır gecikmeli bir sahne cihazı istedin." },
+          { key: 'C', text: "Gerekirse sahnede ufak bir güç kaynağı (UPS) taşırım ama açılması 1-2 dakika sürse de o ses kalitesinden vazgeçmem.", target: 'K', reason: "1-2 dakikalık açılış süresini ses motoru gücü uğruna kabul ettin." }
         ]
       },
       {
         id: 5,
-        text: 'Evde gece saat 02:00\'de kulaklıkla sessizce çalışıyorsun. Cihazın içinden bilgisayar kasası gibi hafif bir fan sesi gelmesi seni rahatsız eder mi?',
+        text: "Gece saat 02:00, kulaklığı takmış sessizce çalışıyorsun. Ev arkadaşın Enes kapıyı açıp 'Bu ne gürültü kanka?' dese, sebep de klavyenin fan sesi olsa tepkin ne olur?",
         options: [
-          { key: 'A', text: 'Çıt çıkmamalı, tamamen sessiz bir enstrüman isterim.', target: 'N', reason: 'Evde çalışırken tamamen sessiz, fansız bir cihaz istedin.' },
-          { key: 'B', text: 'İçinde canavar gibi sistem çalışıyorsa o kadarcık fan sesi nazar boncuğu olsun.', target: 'K', reason: 'Güçlü donanım uğruna dahili fan sesini dert etmedin.' },
-          { key: 'C', text: 'Kulaklık takılıyken duymam bile, ama yine de sessiz olmasını tercih ederim.', target: 'M', reason: 'Sessiz ve modern bir mimariyi tercih ettin.' }
+          { key: 'A', text: "Asla öyle bir şey yaşanmamalı, çıt çıkmayan tamamen sessiz bir alet isterim.", target: 'N', reason: "Evde çalışırken tamamen sessiz, fansız bir cihaz istedin." },
+          { key: 'B', text: "'Kanka içinde canavar gibi sistem çalışıyor, o kadarcık fan sesi nazar boncuğu' der geçerim.", target: 'K', reason: "Güçlü donanım uğruna dahili fan sesini dert etmedin." },
+          { key: 'C', text: "Kulaklık takılıyken ben duymam ama Enes'i de uyandırmayalım, yine de sessiz olsun.", target: 'M', reason: "Sessiz ve modern bir mimariyi tercih ettin." }
         ]
       },
       {
         id: 6,
-        text: 'Bir turneye çıkıyorsun ve bagajda yer kısıtlı.',
+        text: "Kartal'a bir düğünde çalmaya gidiyorsun ve arabanın bagajında yer epey sıkıntılı.",
         options: [
-          { key: 'A', text: 'Benim aletim bagajın yarısını kaplayacak, şimdiden yer açın.', target: 'K', reason: 'Büyük kasayı ve hardcase korumasını göze aldın.' },
-          { key: 'B', text: 'Kucağımda bile götürürüm, o kadar kompakt.', target: 'N', reason: 'Kompakt boyutu her şeyin önüne koydun.' },
-          { key: 'C', text: 'Koltuklardan birini yatırırsak rahat sığar, makul boyutta.', target: 'M', reason: '76 tuşlu dengeli kasa boyutunu uygun buldun.' }
+          { key: 'A', text: "Benim aletim bagajın yarısını kapatacak, şimdiden diğerlerinin eşyalarını öne alın.", target: 'K', reason: "Büyük kasayı ve hardcase korumasını göze aldın." },
+          { key: 'B', text: "Kucağımda bile götürürüm, o kadar kompakt.", target: 'N', reason: "Kompakt boyutu her şeyin önüne koydun." },
+          { key: 'C', text: "Arka koltuktan birini yatırırsak rahat sığar, hallederiz.", target: 'M', reason: "76 tuşlu dengeli kasa boyutunu uygun buldun." }
         ]
       },
       {
         id: 7,
-        text: 'Bir caz standartında piyano solosu atarken parmaklarının altında ne hissetmek istersin?',
+        text: "Bir caz standartında piyano solosu atarken parmaklarının altında ne hissetmek istersin?",
         options: [
-          { key: 'A', text: 'Gerçek bir akustik piyano gibi ağır, dirençli çekiç mekanizması.', target: 'K', reason: 'Caz ve piyano için tam ağırlıklı çekiç tuşeyi seçtin.' },
-          { key: 'B', text: 'Ne çok ağır ne çok hafif; hem piyano çalayım hem hızlı synth solosu atabileyim.', target: 'M', reason: 'Hem piyano hem synth\'e gelen yarı ağırlıklı FSX tuşeyi seçtin.' },
-          { key: 'C', text: 'Hafif ve kaygan olsun; org kaydırmaları (glissando) yaparken parmaklarım acımasın.', target: 'N', reason: 'Hafif ve akıcı waterfall org tuşesini tercih ettin.' }
+          { key: 'A', text: "Gerçek bir akustik piyano gibi ağır, dirençli çekiç mekanizması.", target: 'K', reason: "Caz ve piyano için tam ağırlıklı çekiç tuşeyi seçtin." },
+          { key: 'B', text: "Ne çok ağır ne çok hafif; hem piyano çalayım hem hızlı synth solosu atabileyim.", target: 'M', reason: "Hem piyano hem synth'e gelen yarı ağırlıklı FSX tuşeyi seçtin." },
+          { key: 'C', text: "Hafif ve kaygan olsun; org kaydırmaları (glissando) yaparken parmaklarım acımasın.", target: 'N', reason: "Hafif ve akıcı waterfall org tuşesini tercih ettin." }
         ]
       },
       {
         id: 8,
-        text: 'Balkan müziğinde çok hızlı, süslemeli bir akordeon/klarnet solosu çalacaksın.',
+        text: "Merve Gül'le BÜMK'te çok güzel bir etno parça çalıyorsunuz ve senin acayip hızlı, süslemeli bir klarnet solosu atman gerekiyor.",
         options: [
-          { key: 'A', text: 'Yarı ağırlıklı, hızlı tepki veren bir tuşe tam bu iş için.', target: 'M', reason: 'Hızlı Balkan soloları için esnek yarı ağırlıklı tuşeyi seçtin.' },
-          { key: 'B', text: 'Ağır piyano tuşesinde bile çalarım, elim alışır, yeter ki gerçek piyano hissini kaybetmeyeyim.', target: 'K', reason: 'Hızlı sololarda bile ağır piyano tuşesinden vazgeçmedin.' },
-          { key: 'C', text: 'Hafif org tuşesiyle parmaklarım uçar gider.', target: 'N', reason: 'Süslemeli sololarda hafif org tuşesini avantaj gördün.' }
+          { key: 'A', text: "Yarı ağırlıklı, hızlı tepki veren bir tuşe tam bu iş için, parmaklarım akar.", target: 'M', reason: "Hızlı etno/Balkan soloları için esnek yarı ağırlıklı tuşeyi seçtin." },
+          { key: 'B', text: "Ağır piyano tuşesinde bile çalarım, elim alışır; yeter ki gerçek piyano hissini kaybetmeyeyim.", target: 'K', reason: "Hızlı sololarda bile ağır piyano tuşesinden vazgeçmedin." },
+          { key: 'C', text: "Hafif org tuşesiyle parmaklarım uçar gider.", target: 'N', reason: "Süslemeli sololarda hafif org tuşesini avantaj gördün." }
         ]
       },
       {
         id: 9,
-        text: 'Sahnedeki klavyende kaç tuş olması seni güvende hissettirir?',
+        text: "Sahnedeki klavyende kaç tuş olması seni güvende hissettirir?",
         options: [
-          { key: 'A', text: '73 tuş idealdir, hem kompakt hem iş görür.', target: 'N', reason: '73 tuşlu kompakt sahne formunu tercih ettin.' },
-          { key: 'B', text: '76 tuş olsun; 61 dar geliyor, 88 ise çok uzun. 76 tam kararında.', target: 'M', reason: '76 tuşun dengeli genişliğini tam kararında buldun.' },
-          { key: 'C', text: '73 tuş ama tam piyano ağırlığında olsun, oktavlar yetiyor.', target: 'K', reason: '73 tuşta tam piyano ağırlığı kombinasyonunu seçtin.' }
+          { key: 'A', text: "73 tuş idealdir, hem kompakt hem iş görür.", target: 'N', reason: "73 tuşlu kompakt sahne formunu tercih ettin." },
+          { key: 'B', text: "76 tuş olsun; 61 dar geliyor, 88 ise çok uzun. 76 tam kararında.", target: 'M', reason: "76 tuşun dengeli genişliğini tam kararında buldun." },
+          { key: 'C', text: "73 tuş ama tam piyano ağırlığında olsun, oktavlar yetiyor.", target: 'K', reason: "73 tuşta tam piyano ağırlığı kombinasyonunu seçtin." }
         ]
       },
       {
         id: 10,
-        text: 'Çalarken tuşların dibine bastığında (aftertouch) sese titreşim veya efekt verebilmek senin için ne kadar önemli?',
+        text: "Çalarken tuşların dibine bastığında (aftertouch) sese titreşim veya efekt verebilmek senin için ne kadar önemli?",
         options: [
-          { key: 'A', text: 'Synth-pop ve füzyon çalarken ekspresyon için çok severim, mutlaka kaliteli olsun.', target: 'M', reason: 'Synth-pop ve füzyon çalarken ekspresif tuş tepkisini önemsedin.' },
-          { key: 'B', text: 'Olsa güzel olur ama asıl olayım tuşenin ağırlığı ve gerçekçiliği.', target: 'K', reason: 'Tuşenin gerçekçiliğini ve piyano ağırlığını öne koydun.' },
-          { key: 'C', text: 'Çok da aramam, efektleri elimle düğmelerden çevirerek veririm.', target: 'N', reason: 'Efektleri doğrudan fiziksel düğmelerle yönetmeyi seçtin.' }
+          { key: 'A', text: "Synth-pop ve füzyon çalarken ekspresyon için çok severim, mutlaka kaliteli olsun.", target: 'M', reason: "Synth-pop ve füzyon çalarken ekspresif tuş tepkisini önemsedin." },
+          { key: 'B', text: "Olsa güzel olur ama asıl olayım tuşenin ağırlığı ve gerçekçiliği.", target: 'K', reason: "Tuşenin gerçekçiliğini ve piyano ağırlığını öne koydun." },
+          { key: 'C', text: "Çok da aramam, efektleri elimle düğmelerden çevirerek veririm.", target: 'N', reason: "Efektleri doğrudan fiziksel düğmelerle yönetmeyi seçtin." }
         ]
       },
       {
         id: 11,
-        text: 'Yeni bir şarkı için ses hazırlıyorsun. Hangisi seni daha çok heyecanlandırır?',
+        text: "Arabesk Express için yeni bir ton bulman gerekiyor. Nasıl bir süreç seni daha çok heyecanlandırır?",
         options: [
-          { key: 'A', text: 'Önümde fiziksel düğmeler olsun, hiç ekrana bakmadan çevirip 10 saniyede tonu bulayım.', target: 'N', reason: 'Menüler yerine fiziksel düğmelerle anında kontrol istedin.' },
-          { key: 'B', text: 'Dokunmatik ekrandan 9 farklı ses motorunu birbirine karıştırıp, kendi sample\'larımı yükleyip stüdyo kurmak.', target: 'K', reason: '9 ses motoru ve dokunmatik ekranla derin stüdyo kurmak istedin.' },
-          { key: 'C', text: 'Derin FM ve synth motorlarıyla oynayıp, tek bir büyük kontrol düğmesiyle (knob) sesi canlıda bambaşka bir şeye dönüştürmek.', target: 'M', reason: 'FM-X motoru ve canlı ses morflama yeteneğini seçtin.' }
+          { key: 'A', text: "Hiç ekrana gömülmeden, önümdeki fiziksel düğmeleri çevirip 10 saniyede o tonu yakalamak.", target: 'N', reason: "Menüler yerine fiziksel düğmelerle anında kontrol istedin." },
+          { key: 'B', text: "Dokunmatik ekrandan 9 farklı ses motorunu birbirine karıştırıp, kendi sample'larımı yükleyip stüdyo kurmak.", target: 'K', reason: "9 ses motoru ve dokunmatik ekranla derin stüdyo kurmak istedin." },
+          { key: 'C', text: "Derin FM ve synth motorlarıyla oynayıp, tek bir büyük kontrol düğmesiyle (knob) sesi canlıda bambaşka bir şeye dönüştürmek.", target: 'M', reason: "FM-X motoru ve canlı ses morflama yeteneğini seçtin." }
         ]
       },
       {
         id: 12,
-        text: 'Bir orkestrada aynı şarkı içinde hem yaylı, hem üflemeli, hem piyano, hem de synth lead çalman gerekiyor.',
+        text: "Orkestra provasına geldin ama ne trompet, ne keman, ne üflemeli, ne yaylı... Hiç kimse gelmemiş! Hepsini tek başına senin çalman gerekiyor.",
         options: [
-          { key: 'A', text: 'Klavyeyi 4-5 bölgeye bölerim, sesler kesilmeden tek tuşla geçiş yaparım.', target: 'M', reason: 'Orkestra için çok bölgeli bölme ve kesintisiz geçişi seçtin.' },
-          { key: 'B', text: 'Aynı anda 2 ana katman bana yeter, gerisini şarkı içinde elimle değiştiririm.', target: 'N', reason: 'Sade 2 katmanlı ve doğrudan kontrol edilen düzeni tercih ettin.' },
-          { key: 'C', text: 'Konserin tüm şarkılarını ekrana renkli kutucuklar halinde dizerim, parmağımla dokunup geçerim.', target: 'K', reason: 'Dokunmatik ekranda Set List kutucuklarıyla sahne yönetimini seçtin.' }
+          { key: 'A', text: "Klavyeyi 4-5 bölgeye bölerim, sesler kesilmeden tek tuşla hepsini sırtlarım.", target: 'M', reason: "Orkestra için çok bölgeli bölme ve kesintisiz geçişi seçtin." },
+          { key: 'B', text: "Aynı anda 2 ana katman bana yeter, gerisini şarkı içinde elimle çevirip hallederim.", target: 'N', reason: "Sade 2 katmanlı ve doğrudan kontrol edilen düzeni tercih ettin." },
+          { key: 'C', text: "Tüm partisyonları ekrana renkli kutucuklar halinde dizerim, parmağımla dokunup tek başıma orkestra olurum.", target: 'K', reason: "Dokunmatik ekranda Set List kutucuklarıyla sahne yönetimini seçtin." }
         ]
       },
       {
         id: 13,
-        text: 'Balkan ve Etno müziklerde \'koma\' (mikrotonal ayar) verme ihtiyacı doğdu.',
+        text: "Arap müziği çalıyorsun ve anlık koma (mikrotonal ayar) verme ihtiyacın doğdu.",
         options: [
-          { key: 'A', text: 'Koma şart! Hatta piyasada hazır yapılmış yüzlerce Balkan setini bulup çat diye yükleyebilmeliyim.', target: 'K', reason: 'Koma ve hazır Balkan/Etno set arşivini vazgeçilmez buldun.' },
-          { key: 'B', text: 'Koma ayarlayabilmeliyim ve iyi bir kullanıcı topluluğu olmalı.', target: 'M', reason: 'Koma desteği ve güçlü ses kütüphanesi topluluğunu önemsedin.' },
-          { key: 'C', text: 'Koma olmasa da pitch bend ile idare ederim, benim asıl olayım piyano ve org.', target: 'N', reason: 'Koma yerine saf piyano/org karakterine odaklandın.' }
+          { key: 'A', text: "Koma şart! Hatta piyasada hazır yapılmış yüzlerce etno/oryantal seti bulup çat diye yükleyebilmeliyim.", target: 'K', reason: "Koma ve hazır etno/oryantal set arşivini vazgeçilmez buldun." },
+          { key: 'B', text: "Koma ayarlayabilmeliyim ve iyi bir kullanıcı topluluğu olmalı.", target: 'M', reason: "Koma desteği ve güçlü ses kütüphanesi topluluğunu önemsedin." },
+          { key: 'C', text: "Koma olmasa da pitch bend ile idare ederim, benim asıl olayım piyano ve org.", target: 'N', reason: "Koma yerine saf piyano/org karakterine odaklandın." }
         ]
       },
       {
         id: 14,
-        text: 'Dışarıdan yeni ses kütüphaneleri (sample) indirdin, klavyeye yükleyeceksin. Hafıza konusunda tavrın ne?',
+        text: "Stevie Wonder parçasındaki o meşhur ıslık sesini (ve daha bir sürü garip sample'ı) klavyeye yüklemek istiyorsun. Hafıza konusunda tavrın ne?",
         options: [
-          { key: 'A', text: 'Sınırsız gibi olsun! Çift SSD, 3 GB RAM falan... İstediğim tüm dev piyano ve etno kütüphanelerini aynı anda içine atayım.', target: 'K', reason: '3 GB RAM ve çift SSD ile devasa depolama alanını seçtin.' },
-          { key: 'B', text: '1,5 - 2 GB civarı alan bana gayet yeter, en iyilerini seçip yüklerim.', target: 'M', reason: '1,75 GB kullanıcı flash hafızasını ideal ve yeterli buldun.' },
-          { key: 'C', text: '380 MB civarı sample alanı yeter, zaten cihazın kendi piyano/org sesleri muazzam.', target: 'N', reason: 'Mütevazı sample alanı yerine hazır piyano/org kalitesine güvendin.' }
+          { key: 'A', text: "Sınırsız gibi olsun! Çift SSD, 3 GB RAM... Islık da atarım, dev piyano kütüphanesi de.", target: 'K', reason: "3 GB RAM ve çift SSD ile devasa depolama alanını seçtin." },
+          { key: 'B', text: "1,5 - 2 GB civarı alan bana gayet yeter, en iyilerini seçip yüklerim.", target: 'M', reason: "1,75 GB kullanıcı flash hafızasını ideal ve yeterli buldun." },
+          { key: 'C', text: "380 MB civarı sample alanı yeter, zaten cihazın kendi piyano/org sesleri muazzam.", target: 'N', reason: "Mütevazı sample alanı yerine hazır piyano/org kalitesine güvendin." }
         ]
       },
       {
         id: 15,
-        text: 'Synth-pop ve Disko çalarken aradığın o parlak 80\'ler/90\'lar tonlarını nasıl elde etmek istersin?',
+        text: "Sahnede ABBA'dan 'Gimme! Gimme! Gimme!' patlatıyorsunuz. O parlak synth-pop ve disko tonlarını nasıl elde etmek istersin?",
         options: [
-          { key: 'A', text: 'Gerçek bir FM sentez motoruyla, sıfırdan veya ince ayarlarla kristal gibi tonlar üreterek.', target: 'M', reason: '80\'ler/90\'lar disko ve synth-pop için gerçek FM-X motorunu seçtin.' },
-          { key: 'B', text: 'Analog modelleme, FM, dalga tablosu... Hepsi tek makinede olsun, hangisi lazımsa onu seçeyim.', target: 'K', reason: 'Tüm sentez türlerini tek kasada toplayan 9 motorlu yapıyı seçtin.' },
-          { key: 'C', text: 'Basit, sıcak bir analog synth bölümü olsun; çok karmaşık menülere girmeyeyim.', target: 'N', reason: 'Karmaşık menüler yerine sıcak ve pratik synth bölümünü tercih ettin.' }
+          { key: 'A', text: "Gerçek bir FM sentez motoruyla, sıfırdan veya ince ayarlarla kristal gibi tonlar üreterek.", target: 'M', reason: "Disko ve synth-pop için gerçek FM-X motorunu seçtin." },
+          { key: 'B', text: "Analog modelleme, FM, dalga tablosu... Hepsi tek makinede olsun, hangisi lazımsa onu seçeyim.", target: 'K', reason: "Tüm sentez türlerini tek kasada toplayan 9 motorlu yapıyı seçtin." },
+          { key: 'C', text: "Basit, sıcak bir analog synth bölümü olsun; çok karmaşık menülere girmeyeyim.", target: 'N', reason: "Karmaşık menüler yerine sıcak ve pratik synth bölümünü tercih ettin." }
         ]
       },
       {
         id: 16,
-        text: 'Füzyon ve Caz çalarken en çok hangi sesin \'gerçekçi\' olması seni tavlar?',
+        text: "Casiopea, Low Profile ya da Meow çalarken hangi sesin 'aşırı gerçekçi' olması seni mest eder?",
         options: [
-          { key: 'A', text: 'Dünyaca ünlü kuyruklu piyanolar (Berlin Grand, Italian Grand gibi) ve detaylı elektro piyanolar.', target: 'K', reason: 'Berlin & Italian Grand gibi dev kuyruklu piyano kütüphanelerini seçtin.' },
-          { key: 'B', text: 'Hammond B3 orgun o kirli, sıcak tonu ve efsanevi akustik piyanolar.', target: 'N', reason: 'Efsanevi Hammond org ve akustik piyano karakterini öne koydun.' },
-          { key: 'C', text: 'Hem modern elektro piyanolar hem de keskin füzyon synth lead\'leri.', target: 'M', reason: 'Modern elektro piyanolar ve keskin füzyon synth lead\'lerini seçtin.' }
+          { key: 'A', text: "Dünyaca ünlü kuyruklu piyanolar (Berlin Grand, Italian Grand gibi) ve detaylı elektro piyanolar.", target: 'K', reason: "Berlin & Italian Grand gibi dev kuyruklu piyano kütüphanelerini seçtin." },
+          { key: 'B', text: "Hammond B3 orgun o kirli, sıcak tonu ve efsanevi akustik piyanolar.", target: 'N', reason: "Efsanevi Hammond org ve akustik piyano karakterini öne koydun." },
+          { key: 'C', text: "Hem modern elektro piyanolar hem de keskin füzyon synth lead'leri.", target: 'M', reason: "Modern elektro piyanolar ve keskin füzyon synth lead'lerini seçtin." }
         ]
       },
       {
         id: 17,
-        text: 'Sahneye çıktığında seyircinin ve diğer müzisyenlerin klavyene baktığında ne düşünmesini istersin?',
+        text: "Sahneye çıktığında insanlar havalı saçların yerine bir de klavyene baktığında ne düşünsün istersin?",
         options: [
-          { key: 'A', text: '\'Vay be, o ikonik kırmızı alet! Kesin çok havalı ve tarz bir müzisyen.\'', target: 'N', reason: 'Sahnede ikonik ve tarz görünümü önemsedin.' },
-          { key: 'B', text: '\'Abi adam sahneye bildiğin uzay üssü / profesyonel stüdyo kurmuş.\'', target: 'K', reason: 'Sahnede her şeye hükmeden tam teşekküllü bir istasyon istedin.' },
-          { key: 'C', text: '\'Hem modern, hem şık, hem de ne çalsa altından kalkacak bir canavar.\'', target: 'M', reason: 'Modern, şık ve her türe uyum sağlayan bir sahne imajı seçtin.' }
+          { key: 'A', text: "'Vay be, o ikonik kırmızı alet! Kesin çok havalı ve tarz bir müzisyen.'", target: 'N', reason: "Sahnede ikonik ve tarz görünümü önemsedin." },
+          { key: 'B', text: "'Abi adam sahneye bildiğin uzay üssü / profesyonel stüdyo kurmuş.'", target: 'K', reason: "Sahnede her şeye hükmeden tam teşekküllü bir istasyon istedin." },
+          { key: 'C', text: "'Hem modern, hem şık, hem de ne çalsa altından kalkacak bir canavar.'", target: 'M', reason: "Modern, şık ve her türe uyum sağlayan bir sahne imajı seçtin." }
         ]
       },
       {
         id: 18,
-        text: 'Sahnede bir sesin yankısını (reverb) veya parlaklığını (cutoff) anlık değiştirmek istiyorsun.',
+        text: "Sahnede bir sesin yankısını (reverb) veya parlaklığını (cutoff) anlık değiştirmek istiyorsun.",
         options: [
-          { key: 'A', text: 'Her efektin kendi fiziksel düğmesi gözümün önünde olsun, karanlıkta bile el yordamıyla bulayım.', target: 'N', reason: 'Karanlık sahnede bile her efektin fiziksel potansına ulaşmak istedin.' },
-          { key: 'B', text: 'Işıklı fader\'lar ve devasa bir ana kontrol düğmesiyle aynı anda 10 parametreyi birden hareket ettireyim.', target: 'M', reason: 'Işıklı fader\'lar ve Super Knob ile çoklu parametre kontrolünü seçtin.' },
-          { key: 'C', text: 'Hem fader\'lar olsun hem de büyük dokunmatik ekrandan görsel olarak her şeyi kontrol edeyim.', target: 'K', reason: 'Büyük dokunmatik ekran ve fader kombinasyonunu tercih ettin.' }
+          { key: 'A', text: "Her efektin kendi fiziksel düğmesi gözümün önünde olsun, karanlıkta bile el yordamıyla bulayım.", target: 'N', reason: "Karanlık sahnede bile her efektin fiziksel potansına ulaşmak istedin." },
+          { key: 'B', text: "Işıklı fader'lar ve devasa bir ana kontrol düğmesiyle aynı anda 10 parametreyi birden hareket ettireyim.", target: 'M', reason: "Işıklı fader'lar ve Super Knob ile çoklu parametre kontrolünü seçtin." },
+          { key: 'C', text: "Hem fader'lar olsun hem de büyük dokunmatik ekrandan görsel olarak her şeyi kontrol edeyim.", target: 'K', reason: "Büyük dokunmatik ekran ve fader kombinasyonunu tercih ettin." }
         ]
       },
       {
         id: 19,
-        text: 'Bir klavyeyi öğrenmek için ne kadar zaman ayırmaya gönüllüsün?',
+        text: "Bir klavyeyi öğrenmek için ne kadar zaman ayırmaya gönüllüsün?",
         options: [
-          { key: 'A', text: '1 günde çözüp sahneye çıkmak isterim, kullanım kılavuzu okumayı sevmem.', target: 'N', reason: 'Hızlı öğrenme eğrisi ve anında sahneye hazır yapıyı seçtin.' },
-          { key: 'B', text: 'Haftalarca kurcalarım, YouTube\'dan dersler izlerim; cihazı çözdükçe yeni özellikler keşfetmek hoşuma gider.', target: 'M', reason: 'Kurcaladıkça derinleşen ses tasarım dünyasını sevdin.' },
-          { key: 'C', text: 'Bayağı derin bir işletim sistemi olsun, yıllarca kullansam bile yeni bir şey öğreneyim.', target: 'K', reason: 'Yıllarca keşfedilecek derin bir workstation işletim sistemi istedin.' }
+          { key: 'A', text: "1 günde çözüp sahneye çıkmak isterim, kullanım kılavuzu okumayı sevmem.", target: 'N', reason: "Hızlı öğrenme eğrisi ve anında sahneye hazır yapıyı seçtin." },
+          { key: 'B', text: "Haftalarca kurcalarım, YouTube'dan dersler izlerim; cihazı çözdükçe yeni özellikler keşfetmek hoşuma gider.", target: 'M', reason: "Kurcaladıkça derinleşen ses tasarım dünyasını sevdin." },
+          { key: 'C', text: "Bayağı derin bir işletim sistemi olsun, yıllarca kullansam bile yeni bir şey öğreneyim.", target: 'K', reason: "Yıllarca keşfedilecek derin bir workstation işletim sistemi istedin." }
         ]
       },
       {
         id: 20,
-        text: 'Cihazın yaşı / üretim yılı senin için ne kadar kritik?',
+        text: "Cihazın yaşı / üretim yılı senin için ne kadar kritik?",
         options: [
-          { key: 'A', text: '2013 model bile olsa içi güncellenmiş (RAM/SSD eklenmiş) ve hâlâ efsaneyse hiç takılmam.', target: 'K', reason: 'RAM ve 2. SSD ile güçlendirilmiş efsane bir kasada yaşa takılmadın.' },
-          { key: 'B', text: 'Mümkünse daha yeni nesil bir mimariye sahip olsun, ekranı ve teknolojisi güncel hissettirsin.', target: 'M', reason: 'Daha yeni nesil donanım ve güncel mimariyi tercih ettin.' },
-          { key: 'C', text: 'Klasikleşmiş bir modelse yaşı önemli değil, 10 yıl sonra bile piyasası ve havası kalır.', target: 'N', reason: 'Zamansız klasik duruşu ve ikinci el piyasasını önemsedin.' }
+          { key: 'A', text: "2013 model bile olsa içi güncellenmiş (RAM/SSD eklenmiş) ve hâlâ efsaneyse hiç takılmam.", target: 'K', reason: "RAM ve 2. SSD ile güçlendirilmiş efsane bir kasada yaşa takılmadın." },
+          { key: 'B', text: "Mümkünse daha yeni nesil bir mimariye sahip olsun, ekranı ve teknolojisi güncel hissettirsin.", target: 'M', reason: "Daha yeni nesil donanım ve güncel mimariyi tercih ettin." },
+          { key: 'C', text: "Klasikleşmiş bir modelse yaşı önemli değil, 10 yıl sonra bile piyasası ve havası kalır.", target: 'N', reason: "Zamansız klasik duruşu ve ikinci el piyasasını önemsedin." }
         ]
       },
       {
         id: 21,
-        text: 'İkinci el bir enstrüman alırken satıcıda seni en çok ne rahatlatır?',
+        text: "İkinci el bir enstrüman alırken satıcıda seni en çok ne rahatlatır?",
         options: [
-          { key: 'A', text: 'İlk günden beri ekran koruyucusuyla kullanılmış olması, sigarasız evden gelmesi ve çok temiz kondisyon.', target: 'M', reason: 'İlk günden beri ekran koruyuculu, tertemiz kondisyona güvendin.' },
-          { key: 'B', text: 'Sadece ev stüdyosunda durmuş, hiç sahne görmemiş ve orijinal kutusunda saklanmış olması.', target: 'N', reason: 'Hiç sahne görmemiş, orijinal kutulu ev stüdyosu cihazını seçtin.' },
-          { key: 'C', text: 'İçine ekstra RAM, 2. SSD ve ücretli ses kütüphaneleri eklenmiş, üstüne orijinal hardcase ile verilmesi.', target: 'K', reason: 'Ekstra RAM, 2. SSD, ücretli kütüphaneler ve orijinal case paketini seçtin.' }
+          { key: 'A', text: "İlk günden beri ekran koruyucusuyla kullanılmış olması, sigarasız evden gelmesi ve çok temiz kondisyon.", target: 'M', reason: "İlk günden beri ekran koruyuculu, tertemiz kondisyona güvendin." },
+          { key: 'B', text: "Sadece ev stüdyosunda durmuş, hiç sahne görmemiş ve orijinal kutusunda saklanmış olması.", target: 'N', reason: "Hiç sahne görmemiş, orijinal kutulu ev stüdyosu cihazını seçtin." },
+          { key: 'C', text: "İçine ekstra RAM, 2. SSD ve ücretli ses kütüphaneleri eklenmiş, üstüne orijinal hardcase ile verilmesi.", target: 'K', reason: "Ekstra RAM, 2. SSD, ücretli kütüphaneler ve orijinal case paketini seçtin." }
         ]
       },
       {
         id: 22,
-        text: 'Fiyat-performans dengesinde hangisi sana \'İşte bu benim fırsatım!\' dedirtir?',
+        text: "Fiyat-performans dengesinde hangisi sana 'İşte bu benim fırsatım!' dedirtir?",
         options: [
-          { key: 'A', text: 'Normalde 2.000 € olan dolu paket (case + ekstra donanım) bir canavarı 1.695 €\'ya yakalamak.', target: 'K', reason: '2.000 €\'dan 1.695 €\'ya inen dolu donanım paketini fırsat gördün.' },
-          { key: 'B', text: 'Piyasanın altında 1.650 €\'ya çok temiz bir amiral gemisi yakalamak (kılıfı sonradan alırım).', target: 'M', reason: '1.650 €\'luk piyasa altı amiral gemisi fiyatını kaçırılmaz buldun.' },
-          { key: 'C', text: '1.800 € verip belki biraz daha pahalıya almak ama kargoyla kapıma kadar gelmesi ve hafif olması.', target: 'N', reason: 'Kargo konforu ve hafiflik için 1.800 € bütçeye onay verdin.' }
+          { key: 'A', text: "Normalde 2.000 € olan dolu paket (case + ekstra donanım) bir canavarı 1.695 €'ya yakalamak.", target: 'K', reason: "2.000 €'dan 1.695 €'ya inen dolu donanım paketini fırsat gördün." },
+          { key: 'B', text: "Piyasanın altında 1.650 €'ya çok temiz bir amiral gemisi yakalamak (kılıfı sonradan alırım).", target: 'M', reason: "1.650 €'luk piyasa altı amiral gemisi fiyatını kaçırılmaz buldun." },
+          { key: 'C', text: "1.800 € verip belki biraz daha pahalıya almak ama kargoyla kapıma kadar gelmesi ve hafif olması.", target: 'N', reason: "Kargo konforu ve hafiflik için 1.800 € bütçeye onay verdin." }
         ]
       },
       {
         id: 23,
-        text: '\'Bir kere alayım, 5-6 yıl başka klavyeye bakmayayım\' dediğinde aklındaki en büyük korku nedir?',
+        text: "'Bir kere alayım, 5-6 yıl başka klavyeye bakmayayım' dediğinde aklındaki en büyük korku nedir?",
         options: [
-          { key: 'A', text: 'Hafızasının dolması ve yeni sesler yükleyememek.', target: 'K', reason: 'Gelecekte hafıza sıkıntısı yaşamamak için geniş depolamayı seçtin.' },
-          { key: 'B', text: 'Taşımaktan belimin ağrıması ve provaya götürmeye üşenmek.', target: 'N', reason: 'Uzun vadede bel sağlığını ve taşıma motivasyonunu korudun.' },
-          { key: 'C', text: 'Ses tasarımında sınırlarına çabuk takılıp sıkılmak.', target: 'M', reason: 'Ses tasarımında yıllarca sıkılmayacağın derinliği önemsedin.' }
+          { key: 'A', text: "Hafızasının dolması ve yeni sesler yükleyememek.", target: 'K', reason: "Gelecekte hafıza sıkıntısı yaşamamak için geniş depolamayı seçtin." },
+          { key: 'B', text: "Taşımaktan belimin ağrıması ve provaya götürmeye üşenmek.", target: 'N', reason: "Uzun vadede bel sağlığını ve taşıma motivasyonunu korudun." },
+          { key: 'C', text: "Ses tasarımında sınırlarına çabuk takılıp sıkılmak.", target: 'M', reason: "Ses tasarımında yıllarca sıkılmayacağın derinliği önemsedin." }
         ]
       },
       {
         id: 24,
-        text: 'Satıcı \'Sadece elden teslim, kargo yapmam\' diyor.',
+        text: "Satıcı 'Sadece elden teslim, kargo yapmam' diyor.",
         options: [
-          { key: 'A', text: 'Zaten bu kadar pahalı bir aleti denemeden, tuşlarına basmadan almam; elden olması daha iyi.', target: 'M', reason: 'Cihazı bizzat deneyip elden teslim almayı güvenli buldun.' },
-          { key: 'B', text: 'Yakınsa (örneğin 30-40 dk mesafe) gidip dener alırım, çok uzaksa gözümde büyür.', target: 'K', reason: 'Münih\'e yakın mesafeden (Tutzing) elden almayı mantıklı buldun.' },
-          { key: 'C', text: 'Kargo seçeneği olması benim için büyük konfor, kapıma gelsin.', target: 'N', reason: 'Kargo ile kapına teslim seçeneğini büyük konfor gördün.' }
+          { key: 'A', text: "Zaten bu kadar pahalı bir aleti denemeden, tuşlarına basmadan almam; elden olması daha iyi.", target: 'M', reason: "Cihazı bizzat deneyip elden teslim almayı güvenli buldun." },
+          { key: 'B', text: "Yakınsa (örneğin 30-40 dk mesafe) gidip dener alırım, çok uzaksa gözümde büyür.", target: 'K', reason: "Münih'e yakın mesafeden (Tutzing) elden almayı mantıklı buldun." },
+          { key: 'C', text: "Kargo seçeneği olması benim için büyük konfor, kapıma gelsin.", target: 'N', reason: "Kargo ile kapına teslim seçeneğini büyük konfor gördün." }
         ]
       },
       {
         id: 25,
-        text: 'Bir araba alacak olsan hangisini seçerdin?',
+        text: "Bir araba alacak olsan hangisini seçerdin?",
         options: [
-          { key: 'A', text: 'Şehir içinde her yere park eden, şık, kırmızı, ikonik bir spor hatchback.', target: 'N', reason: 'Pratik, çevik ve ikonik tasarım ruhunu yansıttın.' },
-          { key: 'B', text: 'İçinde her türlü teknoloji ve konfor olan, uzun yolda üzmeyen modern bir SUV.', target: 'M', reason: 'Modern teknoloji ve çok yönlü konfor dengesini seçtin.' },
-          { key: 'C', text: 'Dağa taşa çıkan, kasası devasa, içinde yok yok olan ağır zırhlı bir arazi aracı.', target: 'K', reason: 'Ağır ama sınır tanımayan, her koşula hazır gücü seçtin.' }
+          { key: 'A', text: "Şehir içinde her yere park eden, şık, kırmızı, ikonik bir spor hatchback.", target: 'N', reason: "Pratik, çevik ve ikonik tasarım ruhunu yansıttın." },
+          { key: 'B', text: "İçinde her türlü teknoloji ve konfor olan, uzun yolda üzmeyen modern bir SUV.", target: 'M', reason: "Modern teknoloji ve çok yönlü konfor dengesini seçtin." },
+          { key: 'C', text: "Dağa taşa çıkan, kasası devasa, içinde yok yok olan ağır zırhlı bir arazi aracı.", target: 'K', reason: "Ağır ama sınır tanımayan, her koşula hazır gücü seçtin." }
         ]
       },
       {
         id: 26,
-        text: 'Bir mutfakta yemek yapıyorsun. Tarzın hangisi?',
+        text: "Bir mutfakta yemek yapıyorsun. Tarzın hangisi?",
         options: [
-          { key: 'A', text: 'Az ama en kaliteli 3 malzemeyle, tarif bakmadan mükemmel bir yemek çıkarırım.', target: 'N', reason: 'Sade ama en rafine temellerle hızlı sonuç almayı sevdin.' },
-          { key: 'B', text: 'Mutfakta her türlü baharat, sos ve robot olsun; dünya mutfağından her şeyi yapabileyim.', target: 'K', reason: 'Her tür müzik için eksiksiz bir araç kutusu istedin.' },
-          { key: 'C', text: 'Modern teknikler ve hassas ayarlarla kendi özgün füzyon tariflerimi yaratırım.', target: 'M', reason: 'Hassas ayarlarla özgün füzyon tonları üretmeyi seçtin.' }
+          { key: 'A', text: "Az ama en kaliteli 3 malzemeyle, tarif bakmadan mükemmel bir yemek çıkarırım.", target: 'N', reason: "Sade ama en rafine temellerle hızlı sonuç almayı sevdin." },
+          { key: 'B', text: "Mutfakta her türlü baharat, sos ve robot olsun; dünya mutfağından her şeyi yapabileyim.", target: 'K', reason: "Her tür müzik için eksiksiz bir araç kutusu istedin." },
+          { key: 'C', text: "Modern teknikler ve hassas ayarlarla kendi özgün füzyon tariflerimi yaratırım.", target: 'M', reason: "Hassas ayarlarla özgün füzyon tonları üretmeyi seçtin." }
         ]
       },
       {
         id: 27,
-        text: 'Telefon seçerken hangisi senin için vazgeçilmezdir?',
+        text: "Telefon seçerken hangisi senin için vazgeçilmezdir?",
         options: [
-          { key: 'A', text: 'Çok hafif ve ele oturan tasarım, sade arayüz, takılmasın yeter.', target: 'N', reason: 'Hafiflik ve pürüzsüz sadeliği ön planda tuttun.' },
-          { key: 'B', text: 'Depolama alanı devasa olsun, istediğim her uygulamayı ve dosyayı atayım, bilgisayardan farkı olmasın.', target: 'K', reason: 'Bilgisayar gücünde dev depolama ve esneklik istedin.' },
-          { key: 'C', text: 'İşlemcisi çok güçlü olsun, kamera ve özelleştirme ayarları detaylı olsun.', target: 'M', reason: 'Yüksek işlem gücü ve detaylı özelleştirme seçeneklerini seçtin.' }
+          { key: 'A', text: "Çok hafif ve ele oturan tasarım, sade arayüz, takılmasın yeter.", target: 'N', reason: "Hafiflik ve pürüzsüz sadeliği ön planda tuttun." },
+          { key: 'B', text: "Depolama alanı devasa olsun, istediğim her uygulamayı ve dosyayı atayım, bilgisayardan farkı olmasın.", target: 'K', reason: "Bilgisayar gücünde dev depolama ve esneklik istedin." },
+          { key: 'C', text: "İşlemcisi çok güçlü olsun, kamera ve özelleştirme ayarları detaylı olsun.", target: 'M', reason: "Yüksek işlem gücü ve detaylı özelleştirme seçeneklerini seçtin." }
         ]
       },
       {
         id: 28,
-        text: 'Bir video oyununda karakter seçiyorsun. Hangisi sensin?',
+        text: "Bir video oyununda karakter seçiyorsun. Hangisi sensin?",
         options: [
-          { key: 'A', text: 'Çevik, hızlı hareket eden, az eşya taşıyan ama çok karizmatik suikastçı.', target: 'N', reason: 'Çeviklik, hız ve karizmayı oyun tarzın olarak seçtin.' },
-          { key: 'B', text: 'Her büyüyü bilen, envanteri tıka basa dolu, ağır zırhlı ama yenilmez büyücü/tank.', target: 'K', reason: 'Sınırsız yetenek ve dolu envanterli ağır gücü seçtin.' },
-          { key: 'C', text: 'Hem yakın dövüşte hem büyüde çok iyi, dengeli ve yüksek hasarlı savaşçı.', target: 'M', reason: 'Her alanda yüksek performanslı dengeli gücü seçtin.' }
+          { key: 'A', text: "Çevik, hızlı hareket eden, az eşya taşıyan ama çok karizmatik suikastçı.", target: 'N', reason: "Çeviklik, hız ve karizmayı oyun tarzın olarak seçtin." },
+          { key: 'B', text: "Her büyüyü bilen, envanteri tıka basa dolu, ağır zırhlı ama yenilmez büyücü/tank.", target: 'K', reason: "Sınırsız yetenek ve dolu envanterli ağır gücü seçtin." },
+          { key: 'C', text: "Hem yakın dövüşte hem büyüde çok iyi, dengeli ve yüksek hasarlı savaşçı.", target: 'M', reason: "Her alanda yüksek performanslı dengeli gücü seçtin." }
         ]
       },
       {
         id: 29,
-        text: 'Provalara giderken yanında genellikle ne kadar eşya olur?',
+        text: "Orchestra Generations ile Nardis'te ya da Divine'da çalmaya gidiyorsun. Yanında genellikle ne kadar eşya olur?",
         options: [
-          { key: 'A', text: 'Sadece klavye ve bir pedal. Minimalistim.', target: 'N', reason: 'Minimalist ve zahmetsiz prova düzenini tercih ettin.' },
-          { key: 'B', text: 'Klavye, kablolar, sehpa, pedallar... Zaten yüküm var, biraz daha ağır olsa da düzenimi kurarım.', target: 'M', reason: 'Tam sahne düzenini kurmak için makul ağırlığı sorun etmedin.' },
-          { key: 'C', text: 'Ağır ama düzenli; her şeyin kendi sert kutusu (hardcase) olsun, zarar görmesin.', target: 'K', reason: 'Sert kutulu (hardcase) profesyonel ve korunaklı düzeni seçtin.' }
+          { key: 'A', text: "Sadece klavye ve bir pedal. Minimalistim, mekan dar zaten.", target: 'N', reason: "Minimalist ve zahmetsiz sahne düzenini tercih ettin." },
+          { key: 'B', text: "Klavye, kablolar, sehpa, pedallar... Zaten yüküm var, biraz daha ağır olsa da düzenimi kurarım.", target: 'M', reason: "Tam sahne düzenini kurmak için makul ağırlığı sorun etmedin." },
+          { key: 'C', text: "Ağır ama düzenli; her şeyin kendi sert kutusu (hardcase) olsun, zarar görmesin.", target: 'K', reason: "Sert kutulu (hardcase) profesyonel ve korunaklı düzeni seçtin." }
         ]
       },
       {
         id: 30,
-        text: 'Son soru: Gözlerini kapat ve 1 yıl sonra kendini büyük bir sahnede hayal et. Seni en çok ne mutlu ederdi?',
+        text: "Son soru: Gözlerini kapat ve 1 yıl sonra Mani Festival'de orkestrayla sahnede olduğunu hayal et. Seni en çok ne mutlu ederdi?",
         options: [
-          { key: 'A', text: 'Konser bitince klavyeyi tek elle omzuma atıp gülerek kulise yürümek.', target: 'N', reason: 'Konser sonunda yorulmadan, tek elle kulise yürüme özgürlüğünü hayal ettin.' },
-          { key: 'B', text: 'Konser boyunca Balkan\'dan Caz\'a, Piyano\'dan Synth\'e her geçişte grubun \'Bu sesi nasıl çıkardın?!\' diye şaşırması.', target: 'K', reason: 'Her türde grubu şaşırtan sınırsız ses paletini hayal ettin.' },
-          { key: 'C', text: 'Modern, akıcı bir sahne performansında tuşların ve ışıklı kontrollerin tam elimle bütünleşmesi.', target: 'M', reason: 'Modern, akıcı ve yüksek tepkili bir sahne bütünleşmesini hayal ettin.' }
+          { key: 'A', text: "Konser bitince klavyeyi tek elle omzuma atıp gülerek kulise yürümek.", target: 'N', reason: "Konser sonunda yorulmadan, tek elle kulise yürüme özgürlüğünü hayal ettin." },
+          { key: 'B', text: "Konser boyunca Balkan'dan Caz'a, Piyano'dan Synth'e her geçişte grubun 'Bu sesi nasıl çıkardın?!' diye şaşırması.", target: 'K', reason: "Her türde grubu şaşırtan sınırsız ses paletini hayal ettin." },
+          { key: 'C', text: "Modern, akıcı bir sahne performansında tuşların ve ışıklı kontrollerin tam elimle bütünleşmesi.", target: 'M', reason: "Modern, akıcı ve yüksek tepkili bir sahne bütünleşmesini hayal ettin." }
         ]
       }
     ];
