@@ -1,0 +1,1776 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Onur'un Klavye Karar Testi</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Plus Jakarta Sans (opsiyonel, sistem fontu yedekli) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            navy: {
+              950: '#040814',
+              900: '#060b19',
+              800: '#0c1733',
+              700: '#132347',
+            },
+            turq: {
+              400: '#2dd4bf',
+              500: '#14b8a6',
+              glow: '#00e5ff',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Temel Sayfa ve Arka Plan Ayarları */
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      background-color: #060b19;
+      color: #f1f5f9;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Canlı Aurora ve Işıltı Canvas Katmanı */
+    #bgCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Final Konfeti Canvas Katmanı */
+    #confettiCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 50;
+      pointer-events: none;
+    }
+
+    /* Glassmorphism Kart Stili */
+    .glass-card {
+      background: linear-gradient(145deg, rgba(12, 23, 51, 0.72), rgba(6, 11, 25, 0.84));
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(0, 229, 255, 0.18);
+      box-shadow:
+        0 18px 45px -12px rgba(0, 0, 0, 0.65),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    /* Etkileşimli Seçim Kartları */
+    .choice-card {
+      background: linear-gradient(155deg, rgba(15, 29, 64, 0.78), rgba(7, 14, 32, 0.88));
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1.5px solid rgba(0, 229, 255, 0.2);
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+                  border-color 0.25s ease,
+                  box-shadow 0.25s ease,
+                  background 0.25s ease;
+    }
+
+    .choice-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0, 229, 255, 0.65);
+      box-shadow: 0 14px 36px -10px rgba(0, 229, 255, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    }
+
+    .choice-card:active {
+      transform: scale(0.985);
+    }
+
+    .choice-card.selected {
+      background: linear-gradient(145deg, rgba(0, 229, 255, 0.2), rgba(20, 184, 166, 0.18));
+      border-color: #00e5ff;
+      box-shadow: 0 0 28px rgba(0, 229, 255, 0.35), inset 0 0 18px rgba(0, 229, 255, 0.12);
+    }
+
+    /* Parlayan Ana Buton */
+    .btn-turq {
+      background: linear-gradient(135deg, #00e5ff 0%, #14b8a6 100%);
+      color: #04101f;
+      box-shadow: 0 8px 28px -6px rgba(0, 229, 255, 0.55);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    }
+
+    .btn-turq:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 34px -4px rgba(0, 229, 255, 0.75);
+      filter: brightness(1.06);
+    }
+
+    .btn-turq:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    .btn-turq:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* İkincil Buton */
+    .btn-ghost {
+      background: rgba(15, 29, 64, 0.65);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      color: #e2e8f0;
+      transition: all 0.2s ease;
+    }
+
+    .btn-ghost:hover:not(:disabled) {
+      background: rgba(20, 40, 86, 0.85);
+      border-color: rgba(0, 229, 255, 0.45);
+      color: #ffffff;
+    }
+
+    .btn-ghost:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    /* Ekran ve Soru Geçiş Animasyonları */
+    @keyframes slideInRight {
+      0% { opacity: 0; transform: translateX(26px) scale(0.985); }
+      100% { opacity: 1; transform: translateX(0) scale(1); }
+    }
+
+    @keyframes slideInLeft {
+      0% { opacity: 0; transform: translateX(-26px) scale(0.985); }
+      100% { opacity: 1; transform: translateX(0) scale(1); }
+    }
+
+    @keyframes fadeUp {
+      0% { opacity: 0; transform: translateY(18px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 18px rgba(0, 229, 255, 0.35); }
+      50% { box-shadow: 0 0 32px rgba(0, 229, 255, 0.7); }
+    }
+
+    .anim-slide-next {
+      animation: slideInRight 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .anim-slide-prev {
+      animation: slideInLeft 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .anim-fade-up {
+      animation: fadeUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .pulse-glow {
+      animation: pulseGlow 2.8s ease-in-out infinite;
+    }
+
+    /* Özel Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #060b19;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 229, 255, 0.3);
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 229, 255, 0.55);
+    }
+  </style>
+</head>
+<body class="font-sans antialiased selection:bg-cyan-400/30 selection:text-cyan-100">
+
+  <!-- Canlı Navy-Turkuaz Aurora & Parıltı Arka Plan -->
+  <canvas id="bgCanvas" aria-hidden="true"></canvas>
+
+  <!-- Final Kutlama Konfetisi -->
+  <canvas id="confettiCanvas" aria-hidden="true"></canvas>
+
+  <!-- Ana Uygulama Konteyneri -->
+  <main class="relative z-10 min-h-screen w-full flex flex-col items-center justify-center px-4 py-6 sm:px-6 sm:py-10">
+    <div id="appRoot" class="w-full max-w-4xl mx-auto"></div>
+  </main>
+
+  <script>
+    /* =========================================================================
+       1. VERİ SETLERİ (KRİTERLER, 30 KÖR SENARYO VE 3 KLAVYE ADAYI)
+       ========================================================================= */
+
+    // 1. Aşama: 16 Kriter (King of the Hill - 15 Eşleşme)
+    // K = Korg Kronos 73, M = Yamaha Montage 7, N = Nord Stage 2 EX Compact
+    const STAGE1_CRITERIA = [
+      {
+        id: 'c1',
+        title: 'Uygun Fiyat (1.650 € bandı)',
+        subtitle: 'Bütçeyi en verimli kullanmak',
+        icon: 'tag',
+        weights: { M: 2, K: 1, N: 0 }
+      },
+      {
+        id: 'c2',
+        title: 'Tüy Gibi Hafiflik (10 kg altı)',
+        subtitle: 'Tek elle merdiven çıkabilmek',
+        icon: 'feather',
+        weights: { M: 0, K: 0, N: 3 }
+      },
+      {
+        id: 'c3',
+        title: 'Devasa RAM & Çift SSD',
+        subtitle: 'Sınırsız sample ve kütüphane alanı',
+        icon: 'cpu',
+        weights: { M: 0, K: 3, N: 0 }
+      },
+      {
+        id: 'c4',
+        title: '9 Farklı Ses Motoru',
+        subtitle: 'Her türde sınırsız ses çeşitliliği',
+        icon: 'layers',
+        weights: { M: 0, K: 3, N: 0 }
+      },
+      {
+        id: 'c5',
+        title: 'Tam Ağırlıklı Piyano Tuşesi',
+        subtitle: 'Gerçek akustik piyano hissi',
+        icon: 'piano',
+        weights: { M: 0, K: 3, N: 0 }
+      },
+      {
+        id: 'c6',
+        title: 'Hızlı Yarı Ağırlıklı Tuşe',
+        subtitle: 'Balkan ve synth soloları için esneklik',
+        icon: 'zap',
+        weights: { M: 3, K: 0, N: 0 }
+      },
+      {
+        id: 'c7',
+        title: 'Org (Waterfall) Tuşesi',
+        subtitle: 'Glissando ve hafif çalım konforu',
+        icon: 'wind',
+        weights: { M: 0, K: 0, N: 3 }
+      },
+      {
+        id: 'c8',
+        title: 'Anında Açılış & Sıfır Fan Sesi',
+        subtitle: 'Elektrik kesintisinde beklemeden, sessiz çalım',
+        icon: 'power',
+        weights: { M: 2, K: 0, N: 2 }
+      },
+      {
+        id: 'c9',
+        title: 'Koma & Balkan/Etno Set Ağı',
+        subtitle: 'Hazır etno kütüphaneleri ve mikrotonal destek',
+        icon: 'globe',
+        weights: { M: 2, K: 2, N: 0 }
+      },
+      {
+        id: 'c10',
+        title: 'Yakın Konum / Kargo Rahatlığı',
+        subtitle: '200 km yol çekmeden kolay teslimat',
+        icon: 'map',
+        weights: { M: 0, K: 2, N: 2 }
+      },
+      {
+        id: 'c11',
+        title: 'Orijinal Hard Case Dahil',
+        subtitle: 'Ekstra kılıf masrafı olmadan hazır paket',
+        icon: 'briefcase',
+        weights: { M: 0, K: 3, N: 0 }
+      },
+      {
+        id: 'c12',
+        title: 'Anında Fiziksel Düğme Kontrolü',
+        subtitle: 'Ekrana dalmadan tek dokunuşla ton ayarı',
+        icon: 'sliders',
+        weights: { M: 0, K: 0, N: 3 }
+      },
+      {
+        id: 'c13',
+        title: 'Derin FM Sentez & Ses Tasarımı',
+        subtitle: "80'ler/füzyon tonlarını sıfırdan kurcalamak",
+        icon: 'wave',
+        weights: { M: 3, K: 0, N: 0 }
+      },
+      {
+        id: 'c14',
+        title: 'İkonik Sahne İmajı',
+        subtitle: 'Sahnede ilk bakışta fark edilen karizma',
+        icon: 'sparkles',
+        weights: { M: 0, K: 0, N: 3 }
+      },
+      {
+        id: 'c15',
+        title: 'Çok Katmanlı Orkestra Bölme',
+        subtitle: 'Aynı anda birçok sesi klavyeye yaymak',
+        icon: 'grid',
+        weights: { M: 2, K: 2, N: 0 }
+      },
+      {
+        id: 'c16',
+        title: 'Sıfır Ayarında Güncel Kasa',
+        subtitle: 'Yeni nesil mimari ve ekran koruyuculu temizlik',
+        icon: 'shield',
+        weights: { M: 3, K: 0, N: 0 }
+      }
+    ];
+
+    // 2. Aşama: 30 Kör Senaryo Sorusu
+    const STAGE2_QUESTIONS = [
+      {
+        id: 1,
+        text: 'Konser mekanı merdivenli bir ikinci katta ve asansör yok. Mekana girerken içinden geçen ilk cümle ne olur?',
+        options: [
+          { key: 'A', text: 'Tek elimde alet, diğer elimde kahvemle iki saniyede çıkarım, dert değil.', target: 'N', reason: 'Hafifliği ve tek elle taşınabilirliği önemsedin.' },
+          { key: 'B', text: 'Biraz terlerim ama tek başıma hallederim, yeter ki elimdeki alet sağlam olsun.', target: 'M', reason: 'Orta-ağır olsa da sağlam ve dengeli bir kasayı tercih ettin.' },
+          { key: 'C', text: 'Grup arkadaşlarıma seslenirim; iki kişi ucundan tutarız, o devasa kasa yukarı çıkacak!', target: 'K', reason: 'Ağırlığı göze alıp en kapsamlı donanımı seçtin.' }
+        ]
+      },
+      {
+        id: 2,
+        text: 'Bir müzik aleti alıyorsun ama satıcı çok iyi bir fiyat vermiş, tek şartı şehirden 200 km uzağa gidip elden alman.',
+        options: [
+          { key: 'A', text: '200 km ne ki? Atlar giderim, o fırsat kaçmaz.', target: 'M', reason: 'İyi fiyat için 200 km yol gitmeyi göze aldın.' },
+          { key: 'B', text: 'Yola gitmeye üşenirim, şehrin içinde veya yakın çevrede olsun, gerekirse biraz daha fazla veririm.', target: 'N', reason: 'Uzak yol yerine şehir içi veya kargo rahatlığını seçtin.' },
+          { key: 'C', text: 'Eğer yanında sağlam bir taşıma çantası/hardcase de veriyorsa yakın çevreye kesin giderim.', target: 'K', reason: 'Yakın konum ve yanında orijinal case olmasını büyük avantaj gördün.' }
+        ]
+      },
+      {
+        id: 3,
+        text: 'Hayalindeki enstrümanı aldın ama yanında taşıma kılıfı yok. Ekstra 150–200 € daha harcaman gerekiyor.',
+        options: [
+          { key: 'A', text: 'Aletin kendisi uygun fiyata geldiyse kılıfı kendim seçip almak bana hiç koymaz.', target: 'M', reason: 'Uygun fiyatlı cihaz için ekstra kılıf masrafını sorun etmedin.' },
+          { key: 'B', text: 'Hiç uğraşamam, her şey dahil, kutusu/case\'i hazır paket olsun.', target: 'K', reason: 'Ekstra masrafsız, orijinal hardcase dahil hazır paketi istedin.' },
+          { key: 'C', text: 'Zaten hafif bir şeyse yumuşak bir sırt çantasıyla bile taşırım, çok masraf çıkmaz.', target: 'N', reason: 'Hafif cihazla pratik taşımayı tercih ettin.' }
+        ]
+      },
+      {
+        id: 4,
+        text: 'Konserin en heyecanlı yerinde mekanın elektrikleri 3 saniyeliğine gidip geldi!',
+        options: [
+          { key: 'A', text: 'Sorun yok, 5-10 saniye içinde tekrar çalmaya devam ederim.', target: 'M', reason: 'Sahnede hızlı açılma süresine önem verdin.' },
+          { key: 'B', text: 'Elektrik gelir gelmez anında ses vermeli, 1 saniye bile bekleyemem.', target: 'N', reason: 'Anında açılan, sıfır gecikmeli bir sahne cihazı istedin.' },
+          { key: 'C', text: 'Gerekirse sahnede ufak bir güç kaynağı (UPS) taşırım ama açılması 1-2 dakika sürse de o ses kalitesinden vazgeçmem.', target: 'K', reason: '1-2 dakikalık açılış süresini ses motoru gücü uğruna kabul ettin.' }
+        ]
+      },
+      {
+        id: 5,
+        text: 'Evde gece saat 02:00\'de kulaklıkla sessizce çalışıyorsun. Cihazın içinden bilgisayar kasası gibi hafif bir fan sesi gelmesi seni rahatsız eder mi?',
+        options: [
+          { key: 'A', text: 'Çıt çıkmamalı, tamamen sessiz bir enstrüman isterim.', target: 'N', reason: 'Evde çalışırken tamamen sessiz, fansız bir cihaz istedin.' },
+          { key: 'B', text: 'İçinde canavar gibi sistem çalışıyorsa o kadarcık fan sesi nazar boncuğu olsun.', target: 'K', reason: 'Güçlü donanım uğruna dahili fan sesini dert etmedin.' },
+          { key: 'C', text: 'Kulaklık takılıyken duymam bile, ama yine de sessiz olmasını tercih ederim.', target: 'M', reason: 'Sessiz ve modern bir mimariyi tercih ettin.' }
+        ]
+      },
+      {
+        id: 6,
+        text: 'Bir turneye çıkıyorsun ve bagajda yer kısıtlı.',
+        options: [
+          { key: 'A', text: 'Benim aletim bagajın yarısını kaplayacak, şimdiden yer açın.', target: 'K', reason: 'Büyük kasayı ve hardcase korumasını göze aldın.' },
+          { key: 'B', text: 'Kucağımda bile götürürüm, o kadar kompakt.', target: 'N', reason: 'Kompakt boyutu her şeyin önüne koydun.' },
+          { key: 'C', text: 'Koltuklardan birini yatırırsak rahat sığar, makul boyutta.', target: 'M', reason: '76 tuşlu dengeli kasa boyutunu uygun buldun.' }
+        ]
+      },
+      {
+        id: 7,
+        text: 'Bir caz standartında piyano solosu atarken parmaklarının altında ne hissetmek istersin?',
+        options: [
+          { key: 'A', text: 'Gerçek bir akustik piyano gibi ağır, dirençli çekiç mekanizması.', target: 'K', reason: 'Caz ve piyano için tam ağırlıklı çekiç tuşeyi seçtin.' },
+          { key: 'B', text: 'Ne çok ağır ne çok hafif; hem piyano çalayım hem hızlı synth solosu atabileyim.', target: 'M', reason: 'Hem piyano hem synth\'e gelen yarı ağırlıklı FSX tuşeyi seçtin.' },
+          { key: 'C', text: 'Hafif ve kaygan olsun; org kaydırmaları (glissando) yaparken parmaklarım acımasın.', target: 'N', reason: 'Hafif ve akıcı waterfall org tuşesini tercih ettin.' }
+        ]
+      },
+      {
+        id: 8,
+        text: 'Balkan müziğinde çok hızlı, süslemeli bir akordeon/klarnet solosu çalacaksın.',
+        options: [
+          { key: 'A', text: 'Yarı ağırlıklı, hızlı tepki veren bir tuşe tam bu iş için.', target: 'M', reason: 'Hızlı Balkan soloları için esnek yarı ağırlıklı tuşeyi seçtin.' },
+          { key: 'B', text: 'Ağır piyano tuşesinde bile çalarım, elim alışır, yeter ki gerçek piyano hissini kaybetmeyeyim.', target: 'K', reason: 'Hızlı sololarda bile ağır piyano tuşesinden vazgeçmedin.' },
+          { key: 'C', text: 'Hafif org tuşesiyle parmaklarım uçar gider.', target: 'N', reason: 'Süslemeli sololarda hafif org tuşesini avantaj gördün.' }
+        ]
+      },
+      {
+        id: 9,
+        text: 'Sahnedeki klavyende kaç tuş olması seni güvende hissettirir?',
+        options: [
+          { key: 'A', text: '73 tuş idealdir, hem kompakt hem iş görür.', target: 'N', reason: '73 tuşlu kompakt sahne formunu tercih ettin.' },
+          { key: 'B', text: '76 tuş olsun; 61 dar geliyor, 88 ise çok uzun. 76 tam kararında.', target: 'M', reason: '76 tuşun dengeli genişliğini tam kararında buldun.' },
+          { key: 'C', text: '73 tuş ama tam piyano ağırlığında olsun, oktavlar yetiyor.', target: 'K', reason: '73 tuşta tam piyano ağırlığı kombinasyonunu seçtin.' }
+        ]
+      },
+      {
+        id: 10,
+        text: 'Çalarken tuşların dibine bastığında (aftertouch) sese titreşim veya efekt verebilmek senin için ne kadar önemli?',
+        options: [
+          { key: 'A', text: 'Synth-pop ve füzyon çalarken ekspresyon için çok severim, mutlaka kaliteli olsun.', target: 'M', reason: 'Synth-pop ve füzyon çalarken ekspresif tuş tepkisini önemsedin.' },
+          { key: 'B', text: 'Olsa güzel olur ama asıl olayım tuşenin ağırlığı ve gerçekçiliği.', target: 'K', reason: 'Tuşenin gerçekçiliğini ve piyano ağırlığını öne koydun.' },
+          { key: 'C', text: 'Çok da aramam, efektleri elimle düğmelerden çevirerek veririm.', target: 'N', reason: 'Efektleri doğrudan fiziksel düğmelerle yönetmeyi seçtin.' }
+        ]
+      },
+      {
+        id: 11,
+        text: 'Yeni bir şarkı için ses hazırlıyorsun. Hangisi seni daha çok heyecanlandırır?',
+        options: [
+          { key: 'A', text: 'Önümde fiziksel düğmeler olsun, hiç ekrana bakmadan çevirip 10 saniyede tonu bulayım.', target: 'N', reason: 'Menüler yerine fiziksel düğmelerle anında kontrol istedin.' },
+          { key: 'B', text: 'Dokunmatik ekrandan 9 farklı ses motorunu birbirine karıştırıp, kendi sample\'larımı yükleyip stüdyo kurmak.', target: 'K', reason: '9 ses motoru ve dokunmatik ekranla derin stüdyo kurmak istedin.' },
+          { key: 'C', text: 'Derin FM ve synth motorlarıyla oynayıp, tek bir büyük kontrol düğmesiyle (knob) sesi canlıda bambaşka bir şeye dönüştürmek.', target: 'M', reason: 'FM-X motoru ve canlı ses morflama yeteneğini seçtin.' }
+        ]
+      },
+      {
+        id: 12,
+        text: 'Bir orkestrada aynı şarkı içinde hem yaylı, hem üflemeli, hem piyano, hem de synth lead çalman gerekiyor.',
+        options: [
+          { key: 'A', text: 'Klavyeyi 4-5 bölgeye bölerim, sesler kesilmeden tek tuşla geçiş yaparım.', target: 'M', reason: 'Orkestra için çok bölgeli bölme ve kesintisiz geçişi seçtin.' },
+          { key: 'B', text: 'Aynı anda 2 ana katman bana yeter, gerisini şarkı içinde elimle değiştiririm.', target: 'N', reason: 'Sade 2 katmanlı ve doğrudan kontrol edilen düzeni tercih ettin.' },
+          { key: 'C', text: 'Konserin tüm şarkılarını ekrana renkli kutucuklar halinde dizerim, parmağımla dokunup geçerim.', target: 'K', reason: 'Dokunmatik ekranda Set List kutucuklarıyla sahne yönetimini seçtin.' }
+        ]
+      },
+      {
+        id: 13,
+        text: 'Balkan ve Etno müziklerde \'koma\' (mikrotonal ayar) verme ihtiyacı doğdu.',
+        options: [
+          { key: 'A', text: 'Koma şart! Hatta piyasada hazır yapılmış yüzlerce Balkan setini bulup çat diye yükleyebilmeliyim.', target: 'K', reason: 'Koma ve hazır Balkan/Etno set arşivini vazgeçilmez buldun.' },
+          { key: 'B', text: 'Koma ayarlayabilmeliyim ve iyi bir kullanıcı topluluğu olmalı.', target: 'M', reason: 'Koma desteği ve güçlü ses kütüphanesi topluluğunu önemsedin.' },
+          { key: 'C', text: 'Koma olmasa da pitch bend ile idare ederim, benim asıl olayım piyano ve org.', target: 'N', reason: 'Koma yerine saf piyano/org karakterine odaklandın.' }
+        ]
+      },
+      {
+        id: 14,
+        text: 'Dışarıdan yeni ses kütüphaneleri (sample) indirdin, klavyeye yükleyeceksin. Hafıza konusunda tavrın ne?',
+        options: [
+          { key: 'A', text: 'Sınırsız gibi olsun! Çift SSD, 3 GB RAM falan... İstediğim tüm dev piyano ve etno kütüphanelerini aynı anda içine atayım.', target: 'K', reason: '3 GB RAM ve çift SSD ile devasa depolama alanını seçtin.' },
+          { key: 'B', text: '1,5 - 2 GB civarı alan bana gayet yeter, en iyilerini seçip yüklerim.', target: 'M', reason: '1,75 GB kullanıcı flash hafızasını ideal ve yeterli buldun.' },
+          { key: 'C', text: '380 MB civarı sample alanı yeter, zaten cihazın kendi piyano/org sesleri muazzam.', target: 'N', reason: 'Mütevazı sample alanı yerine hazır piyano/org kalitesine güvendin.' }
+        ]
+      },
+      {
+        id: 15,
+        text: 'Synth-pop ve Disko çalarken aradığın o parlak 80\'ler/90\'lar tonlarını nasıl elde etmek istersin?',
+        options: [
+          { key: 'A', text: 'Gerçek bir FM sentez motoruyla, sıfırdan veya ince ayarlarla kristal gibi tonlar üreterek.', target: 'M', reason: '80\'ler/90\'lar disko ve synth-pop için gerçek FM-X motorunu seçtin.' },
+          { key: 'B', text: 'Analog modelleme, FM, dalga tablosu... Hepsi tek makinede olsun, hangisi lazımsa onu seçeyim.', target: 'K', reason: 'Tüm sentez türlerini tek kasada toplayan 9 motorlu yapıyı seçtin.' },
+          { key: 'C', text: 'Basit, sıcak bir analog synth bölümü olsun; çok karmaşık menülere girmeyeyim.', target: 'N', reason: 'Karmaşık menüler yerine sıcak ve pratik synth bölümünü tercih ettin.' }
+        ]
+      },
+      {
+        id: 16,
+        text: 'Füzyon ve Caz çalarken en çok hangi sesin \'gerçekçi\' olması seni tavlar?',
+        options: [
+          { key: 'A', text: 'Dünyaca ünlü kuyruklu piyanolar (Berlin Grand, Italian Grand gibi) ve detaylı elektro piyanolar.', target: 'K', reason: 'Berlin & Italian Grand gibi dev kuyruklu piyano kütüphanelerini seçtin.' },
+          { key: 'B', text: 'Hammond B3 orgun o kirli, sıcak tonu ve efsanevi akustik piyanolar.', target: 'N', reason: 'Efsanevi Hammond org ve akustik piyano karakterini öne koydun.' },
+          { key: 'C', text: 'Hem modern elektro piyanolar hem de keskin füzyon synth lead\'leri.', target: 'M', reason: 'Modern elektro piyanolar ve keskin füzyon synth lead\'lerini seçtin.' }
+        ]
+      },
+      {
+        id: 17,
+        text: 'Sahneye çıktığında seyircinin ve diğer müzisyenlerin klavyene baktığında ne düşünmesini istersin?',
+        options: [
+          { key: 'A', text: '\'Vay be, o ikonik kırmızı alet! Kesin çok havalı ve tarz bir müzisyen.\'', target: 'N', reason: 'Sahnede ikonik ve tarz görünümü önemsedin.' },
+          { key: 'B', text: '\'Abi adam sahneye bildiğin uzay üssü / profesyonel stüdyo kurmuş.\'', target: 'K', reason: 'Sahnede her şeye hükmeden tam teşekküllü bir istasyon istedin.' },
+          { key: 'C', text: '\'Hem modern, hem şık, hem de ne çalsa altından kalkacak bir canavar.\'', target: 'M', reason: 'Modern, şık ve her türe uyum sağlayan bir sahne imajı seçtin.' }
+        ]
+      },
+      {
+        id: 18,
+        text: 'Sahnede bir sesin yankısını (reverb) veya parlaklığını (cutoff) anlık değiştirmek istiyorsun.',
+        options: [
+          { key: 'A', text: 'Her efektin kendi fiziksel düğmesi gözümün önünde olsun, karanlıkta bile el yordamıyla bulayım.', target: 'N', reason: 'Karanlık sahnede bile her efektin fiziksel potansına ulaşmak istedin.' },
+          { key: 'B', text: 'Işıklı fader\'lar ve devasa bir ana kontrol düğmesiyle aynı anda 10 parametreyi birden hareket ettireyim.', target: 'M', reason: 'Işıklı fader\'lar ve Super Knob ile çoklu parametre kontrolünü seçtin.' },
+          { key: 'C', text: 'Hem fader\'lar olsun hem de büyük dokunmatik ekrandan görsel olarak her şeyi kontrol edeyim.', target: 'K', reason: 'Büyük dokunmatik ekran ve fader kombinasyonunu tercih ettin.' }
+        ]
+      },
+      {
+        id: 19,
+        text: 'Bir klavyeyi öğrenmek için ne kadar zaman ayırmaya gönüllüsün?',
+        options: [
+          { key: 'A', text: '1 günde çözüp sahneye çıkmak isterim, kullanım kılavuzu okumayı sevmem.', target: 'N', reason: 'Hızlı öğrenme eğrisi ve anında sahneye hazır yapıyı seçtin.' },
+          { key: 'B', text: 'Haftalarca kurcalarım, YouTube\'dan dersler izlerim; cihazı çözdükçe yeni özellikler keşfetmek hoşuma gider.', target: 'M', reason: 'Kurcaladıkça derinleşen ses tasarım dünyasını sevdin.' },
+          { key: 'C', text: 'Bayağı derin bir işletim sistemi olsun, yıllarca kullansam bile yeni bir şey öğreneyim.', target: 'K', reason: 'Yıllarca keşfedilecek derin bir workstation işletim sistemi istedin.' }
+        ]
+      },
+      {
+        id: 20,
+        text: 'Cihazın yaşı / üretim yılı senin için ne kadar kritik?',
+        options: [
+          { key: 'A', text: '2013 model bile olsa içi güncellenmiş (RAM/SSD eklenmiş) ve hâlâ efsaneyse hiç takılmam.', target: 'K', reason: 'RAM ve 2. SSD ile güçlendirilmiş efsane bir kasada yaşa takılmadın.' },
+          { key: 'B', text: 'Mümkünse daha yeni nesil bir mimariye sahip olsun, ekranı ve teknolojisi güncel hissettirsin.', target: 'M', reason: 'Daha yeni nesil donanım ve güncel mimariyi tercih ettin.' },
+          { key: 'C', text: 'Klasikleşmiş bir modelse yaşı önemli değil, 10 yıl sonra bile piyasası ve havası kalır.', target: 'N', reason: 'Zamansız klasik duruşu ve ikinci el piyasasını önemsedin.' }
+        ]
+      },
+      {
+        id: 21,
+        text: 'İkinci el bir enstrüman alırken satıcıda seni en çok ne rahatlatır?',
+        options: [
+          { key: 'A', text: 'İlk günden beri ekran koruyucusuyla kullanılmış olması, sigarasız evden gelmesi ve çok temiz kondisyon.', target: 'M', reason: 'İlk günden beri ekran koruyuculu, tertemiz kondisyona güvendin.' },
+          { key: 'B', text: 'Sadece ev stüdyosunda durmuş, hiç sahne görmemiş ve orijinal kutusunda saklanmış olması.', target: 'N', reason: 'Hiç sahne görmemiş, orijinal kutulu ev stüdyosu cihazını seçtin.' },
+          { key: 'C', text: 'İçine ekstra RAM, 2. SSD ve ücretli ses kütüphaneleri eklenmiş, üstüne orijinal hardcase ile verilmesi.', target: 'K', reason: 'Ekstra RAM, 2. SSD, ücretli kütüphaneler ve orijinal case paketini seçtin.' }
+        ]
+      },
+      {
+        id: 22,
+        text: 'Fiyat-performans dengesinde hangisi sana \'İşte bu benim fırsatım!\' dedirtir?',
+        options: [
+          { key: 'A', text: 'Normalde 2.000 € olan dolu paket (case + ekstra donanım) bir canavarı 1.695 €\'ya yakalamak.', target: 'K', reason: '2.000 €\'dan 1.695 €\'ya inen dolu donanım paketini fırsat gördün.' },
+          { key: 'B', text: 'Piyasanın altında 1.650 €\'ya çok temiz bir amiral gemisi yakalamak (kılıfı sonradan alırım).', target: 'M', reason: '1.650 €\'luk piyasa altı amiral gemisi fiyatını kaçırılmaz buldun.' },
+          { key: 'C', text: '1.800 € verip belki biraz daha pahalıya almak ama kargoyla kapıma kadar gelmesi ve hafif olması.', target: 'N', reason: 'Kargo konforu ve hafiflik için 1.800 € bütçeye onay verdin.' }
+        ]
+      },
+      {
+        id: 23,
+        text: '\'Bir kere alayım, 5-6 yıl başka klavyeye bakmayayım\' dediğinde aklındaki en büyük korku nedir?',
+        options: [
+          { key: 'A', text: 'Hafızasının dolması ve yeni sesler yükleyememek.', target: 'K', reason: 'Gelecekte hafıza sıkıntısı yaşamamak için geniş depolamayı seçtin.' },
+          { key: 'B', text: 'Taşımaktan belimin ağrıması ve provaya götürmeye üşenmek.', target: 'N', reason: 'Uzun vadede bel sağlığını ve taşıma motivasyonunu korudun.' },
+          { key: 'C', text: 'Ses tasarımında sınırlarına çabuk takılıp sıkılmak.', target: 'M', reason: 'Ses tasarımında yıllarca sıkılmayacağın derinliği önemsedin.' }
+        ]
+      },
+      {
+        id: 24,
+        text: 'Satıcı \'Sadece elden teslim, kargo yapmam\' diyor.',
+        options: [
+          { key: 'A', text: 'Zaten bu kadar pahalı bir aleti denemeden, tuşlarına basmadan almam; elden olması daha iyi.', target: 'M', reason: 'Cihazı bizzat deneyip elden teslim almayı güvenli buldun.' },
+          { key: 'B', text: 'Yakınsa (örneğin 30-40 dk mesafe) gidip dener alırım, çok uzaksa gözümde büyür.', target: 'K', reason: 'Münih\'e yakın mesafeden (Tutzing) elden almayı mantıklı buldun.' },
+          { key: 'C', text: 'Kargo seçeneği olması benim için büyük konfor, kapıma gelsin.', target: 'N', reason: 'Kargo ile kapına teslim seçeneğini büyük konfor gördün.' }
+        ]
+      },
+      {
+        id: 25,
+        text: 'Bir araba alacak olsan hangisini seçerdin?',
+        options: [
+          { key: 'A', text: 'Şehir içinde her yere park eden, şık, kırmızı, ikonik bir spor hatchback.', target: 'N', reason: 'Pratik, çevik ve ikonik tasarım ruhunu yansıttın.' },
+          { key: 'B', text: 'İçinde her türlü teknoloji ve konfor olan, uzun yolda üzmeyen modern bir SUV.', target: 'M', reason: 'Modern teknoloji ve çok yönlü konfor dengesini seçtin.' },
+          { key: 'C', text: 'Dağa taşa çıkan, kasası devasa, içinde yok yok olan ağır zırhlı bir arazi aracı.', target: 'K', reason: 'Ağır ama sınır tanımayan, her koşula hazır gücü seçtin.' }
+        ]
+      },
+      {
+        id: 26,
+        text: 'Bir mutfakta yemek yapıyorsun. Tarzın hangisi?',
+        options: [
+          { key: 'A', text: 'Az ama en kaliteli 3 malzemeyle, tarif bakmadan mükemmel bir yemek çıkarırım.', target: 'N', reason: 'Sade ama en rafine temellerle hızlı sonuç almayı sevdin.' },
+          { key: 'B', text: 'Mutfakta her türlü baharat, sos ve robot olsun; dünya mutfağından her şeyi yapabileyim.', target: 'K', reason: 'Her tür müzik için eksiksiz bir araç kutusu istedin.' },
+          { key: 'C', text: 'Modern teknikler ve hassas ayarlarla kendi özgün füzyon tariflerimi yaratırım.', target: 'M', reason: 'Hassas ayarlarla özgün füzyon tonları üretmeyi seçtin.' }
+        ]
+      },
+      {
+        id: 27,
+        text: 'Telefon seçerken hangisi senin için vazgeçilmezdir?',
+        options: [
+          { key: 'A', text: 'Çok hafif ve ele oturan tasarım, sade arayüz, takılmasın yeter.', target: 'N', reason: 'Hafiflik ve pürüzsüz sadeliği ön planda tuttun.' },
+          { key: 'B', text: 'Depolama alanı devasa olsun, istediğim her uygulamayı ve dosyayı atayım, bilgisayardan farkı olmasın.', target: 'K', reason: 'Bilgisayar gücünde dev depolama ve esneklik istedin.' },
+          { key: 'C', text: 'İşlemcisi çok güçlü olsun, kamera ve özelleştirme ayarları detaylı olsun.', target: 'M', reason: 'Yüksek işlem gücü ve detaylı özelleştirme seçeneklerini seçtin.' }
+        ]
+      },
+      {
+        id: 28,
+        text: 'Bir video oyununda karakter seçiyorsun. Hangisi sensin?',
+        options: [
+          { key: 'A', text: 'Çevik, hızlı hareket eden, az eşya taşıyan ama çok karizmatik suikastçı.', target: 'N', reason: 'Çeviklik, hız ve karizmayı oyun tarzın olarak seçtin.' },
+          { key: 'B', text: 'Her büyüyü bilen, envanteri tıka basa dolu, ağır zırhlı ama yenilmez büyücü/tank.', target: 'K', reason: 'Sınırsız yetenek ve dolu envanterli ağır gücü seçtin.' },
+          { key: 'C', text: 'Hem yakın dövüşte hem büyüde çok iyi, dengeli ve yüksek hasarlı savaşçı.', target: 'M', reason: 'Her alanda yüksek performanslı dengeli gücü seçtin.' }
+        ]
+      },
+      {
+        id: 29,
+        text: 'Provalara giderken yanında genellikle ne kadar eşya olur?',
+        options: [
+          { key: 'A', text: 'Sadece klavye ve bir pedal. Minimalistim.', target: 'N', reason: 'Minimalist ve zahmetsiz prova düzenini tercih ettin.' },
+          { key: 'B', text: 'Klavye, kablolar, sehpa, pedallar... Zaten yüküm var, biraz daha ağır olsa da düzenimi kurarım.', target: 'M', reason: 'Tam sahne düzenini kurmak için makul ağırlığı sorun etmedin.' },
+          { key: 'C', text: 'Ağır ama düzenli; her şeyin kendi sert kutusu (hardcase) olsun, zarar görmesin.', target: 'K', reason: 'Sert kutulu (hardcase) profesyonel ve korunaklı düzeni seçtin.' }
+        ]
+      },
+      {
+        id: 30,
+        text: 'Son soru: Gözlerini kapat ve 1 yıl sonra kendini büyük bir sahnede hayal et. Seni en çok ne mutlu ederdi?',
+        options: [
+          { key: 'A', text: 'Konser bitince klavyeyi tek elle omzuma atıp gülerek kulise yürümek.', target: 'N', reason: 'Konser sonunda yorulmadan, tek elle kulise yürüme özgürlüğünü hayal ettin.' },
+          { key: 'B', text: 'Konser boyunca Balkan\'dan Caz\'a, Piyano\'dan Synth\'e her geçişte grubun \'Bu sesi nasıl çıkardın?!\' diye şaşırması.', target: 'K', reason: 'Her türde grubu şaşırtan sınırsız ses paletini hayal ettin.' },
+          { key: 'C', text: 'Modern, akıcı bir sahne performansında tuşların ve ışıklı kontrollerin tam elimle bütünleşmesi.', target: 'M', reason: 'Modern, akıcı ve yüksek tepkili bir sahne bütünleşmesini hayal ettin.' }
+        ]
+      }
+    ];
+
+    // 3 Klavye Adayının Detaylı İlan ve Teknik Verileri
+    const KEYBOARDS = {
+      K: {
+        id: 'K',
+        name: 'Korg Kronos 73',
+        shortName: 'Korg Kronos 73 (2013)',
+        tagline: '9 Ses Motorlu, Çift SSD\'li Sahne Canavarı',
+        price: '1.695 € (2.000 €\'dan inmiş)',
+        location: '82327 Tutzing (Münih yakını) — Elden teslim',
+        extras: 'Orijinal Hard Case, 3 GB RAM, 2. SSD, Berlin & Italian Grand kütüphaneleri',
+        keybed: '73 Tuş RH3 Tam Ağırlıklı Piyano Tuşesi',
+        weight: '~20,4 kg (Case ile ~30 kg)',
+        pros: [
+          '9 ayrı ses motoruyla Balkan, Etno, Caz, Füzyon ve Synth-pop\'ta sınır tanımaz.',
+          'Orijinal Hard Case, 3 GB RAM, 2. SSD ve ücretli kuyruklu piyano kütüphaneleri dahil.',
+          'Türkiye ve Avrupa\'da en yaygın hazır Balkan/Etno set ve koma ekosistemine sahip.',
+          'Münih\'e çok yakın (Tutzing) konumda.'
+        ],
+        watchouts: [
+          'Hardcase ile birlikte oldukça ağır (~30 kg), arabasız taşımak yorucu olur.',
+          'Açılış süresi 1,5–2 dakika sürer; canlı sahnede mini bir UPS önerilir.',
+          '2013 model olduğu için elden denerken tuşları ve fan sesini mutlaka kontrol et.'
+        ],
+        accent: 'from-cyan-400 to-teal-400'
+      },
+      M: {
+        id: 'M',
+        name: 'Yamaha Montage 7',
+        shortName: 'Yamaha Montage 7',
+        tagline: 'Modern, Hızlı ve Derin FM-X Amiral Gemisi',
+        price: '1.650 €',
+        location: '72184 Eutingen (~200 km) — Sadece elden & nakit',
+        extras: 'Güç kablosu, kılavuz, 1. günden beri ekran koruyuculu (Kılıf hariç)',
+        keybed: '76 Tuş FSX Yarı Ağırlıklı Synth Tuşesi',
+        weight: '~17 kg (Orta-Ağır)',
+        pros: [
+          'Piyasanın altında 1.650 € fiyatla tertemiz, sigarasız evden amiral gemisi fırsatı.',
+          'AWM2 + 8 operatörlü FM-X motoru ve Super Knob ile füzyon/synth-pop/diskoda rakipsiz.',
+          '76 tuşlu FSX yarı ağırlıklı tuşe hem hızlı Balkan sololarına hem piyano partilerine gelir.',
+          'Hızlı açılır, fansız ve sessizdir; orkestrada 16 kanala kadar kesintisiz bölünür.'
+        ],
+        watchouts: [
+          'Eutingen\'den elden teslim için ~200 km yol gitmen gerekiyor.',
+          'Yanında taşıma kılıfı yok; ekstra 150–200 € civarı kılıf/case bütçesi ayırmalısın.'
+        ],
+        accent: 'from-sky-400 to-cyan-300'
+      },
+      N: {
+        id: 'N',
+        name: 'Nord Stage 2 EX Compact',
+        shortName: 'Nord Stage 2 EX Compact',
+        tagline: 'Tüy Gibi Hafif, İkonik Kırmızı Sahne Efsanesi',
+        price: '1.800 € (+25 € kargo)',
+        location: '81739 Münih (Ramersdorf-Perlach) — Elden veya Kargo',
+        extras: 'Orijinal karton kutu, sadece ev stüdyosunda kullanılmış, elden alımda ekstra sesler',
+        keybed: '73 Tuş Waterfall (Org) Tuşesi',
+        weight: '~9,7 kg (Ultra Hafif)',
+        pros: [
+          'Sadece 9,7 kg ağırlığıyla tek elle merdiven çıkıp provalara zahmetsizce götürülür.',
+          'Her efektin önünde fiziksel düğmesi var; anında açılır, sıfır fan sesi çıkarır.',
+          'Münih içinde ve orijinal kutusuyla kargolanabiliyor; hiç sahne görmemiş.',
+          'Sahnede anında fark edilen ikonik tasarım ve harika org/piyano karakteri.'
+        ],
+        watchouts: [
+          'Yerleşik koma (microtuning) desteği yok ve 380 MB sample hafızası Balkan/Etno için dar gelebilir.',
+          'İki nesil geride kalan bir model için 1.800 € diğer iki adaya göre biraz daha yüksek.'
+        ],
+        accent: 'from-teal-300 to-emerald-400'
+      }
+    };
+
+    /* =========================================================================
+       2. SVG İKON KÜTÜPHANESİ (HARİCİ BAĞIMLILIKSIZ)
+       ========================================================================= */
+    function getIconSvg(name, cls = 'w-7 h-7') {
+      const icons = {
+        tag: `<svg class="${cls}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>`,
+        feather: `<svg class="${cls}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M20.24 12.24a6 6 0 00-8.49-8.49L5 10.5V19h8.5zM16 8L2 22M17.5 15H9"/></svg>`,
+        cpu: `<svg class="${cls}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg>`,
+        layers: `<svg class="${cls}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>`,
+        piano: `<svg class="${cls}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 4v9M10 4v9M14 4v9M18 4v9M8 13v7M12 13v7M16 13v7"/></svg>`,
+        zap: `<svg class="${cls}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>`,
+        wind: `<svg class="${cls}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9.59 4.59A2 2 0 1111 8H2m10.59 11.41A2 2 0 1014 16H2m15.73-8.27A2.5 2.5 0 1119.5 12H2"/></svg>`,
+        power: `<svg class="${cls}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M18.36 6.64a9 9 0 11-12.73 0M12 2v10"/></svg>`,
+        globe: `<svg class="${cls}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>`,
+        map: `<svg class="${cls}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><circle cx="12" cy="11" r="3"/></svg>`,
+        briefcase: `<svg class="${cls}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>`,
+        sliders: `<svg class="${cls}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M4 21v-7m0-4V3m8 18v-9m0-4V3m8 18v-5m0-4V3M1 14h6m2-6h6m2 8h6"/></svg>`,
+        wave: `<svg class="${cls}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M2 12h3l2.5-7 4 14 3.5-10 2 3H22"/></svg>`,
+        sparkles: `<svg class="${cls}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>`,
+        grid: `<svg class="${cls}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>`,
+        shield: `<svg class="${cls}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4"/></svg>`,
+        trophy: `<svg class="${cls}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M8 21h8m-4-4v4m-5-9a5 5 0 0010 0V4H7v8zm10-7h3v3a3 3 0 01-3 3M7 5H4v3a3 3 0 003 3"/></svg>`,
+        check: `<svg class="${cls}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`
+      };
+      return icons[name] || icons.sparkles;
+    }
+
+    /* =========================================================================
+       3. UYGULAMA DURUMU (STATE) VE TURNUVA HESAPLAYICI
+       ========================================================================= */
+    const state = {
+      screen: 'welcome',       // 'welcome' | 'stage1' | 'transition' | 'stage2' | 'result'
+      navDir: 'next',          // 'next' | 'prev' (animasyon yönü)
+      stage1Index: 0,          // 0..14 (15 eşleşme)
+      stage1Choices: new Array(STAGE1_CRITERIA.length - 1).fill(null), // 'left' | 'right' | null
+      stage2Index: 0,          // 0..29 (30 soru)
+      stage2Answers: new Array(STAGE2_QUESTIONS.length).fill(null),    // 0 | 1 | 2 | null
+      autoAdvanceTimer: null
+    };
+
+    /**
+     * 1. Aşamadaki King of the Hill (Kazanan Kalır) eşleşmelerini
+     * seçimler dizisine göre deterministik olarak hesaplar.
+     */
+    function computeStage1Bracket() {
+      const matchups = [];
+      let currentChampion = STAGE1_CRITERIA[0];
+
+      for (let i = 0; i < STAGE1_CRITERIA.length - 1; i++) {
+        const left = currentChampion;
+        const right = STAGE1_CRITERIA[i + 1];
+        const choice = state.stage1Choices[i];
+        let winner = null;
+        let loser = null;
+
+        if (choice === 'left') {
+          winner = left;
+          loser = right;
+        } else if (choice === 'right') {
+          winner = right;
+          loser = left;
+        }
+
+        matchups.push({ index: i, left, right, choice, winner, loser });
+
+        if (winner) {
+          currentChampion = winner;
+        } else {
+          // Henüz seçilmemiş adımdan sonrası hesaplanmaz
+          break;
+        }
+      }
+
+      return matchups;
+    }
+
+    /**
+     * 1. Aşamadan en yüksek öncelikli ilk 3 kriteri döndürür.
+     */
+    function getStage1Top3() {
+      const matchups = computeStage1Bracket();
+      const stats = {};
+      STAGE1_CRITERIA.forEach((c) => {
+        stats[c.id] = { item: c, wins: 0, lastStep: -1, isChampion: false };
+      });
+
+      matchups.forEach((m) => {
+        if (m.winner) {
+          stats[m.winner.id].wins += 1;
+          stats[m.winner.id].lastStep = m.index;
+        }
+      });
+
+      const finalMatch = matchups[matchups.length - 1];
+      if (finalMatch && finalMatch.winner) {
+        stats[finalMatch.winner.id].isChampion = true;
+      }
+
+      return Object.values(stats)
+        .filter((s) => s.wins > 0)
+        .sort((a, b) => {
+          if (a.isChampion !== b.isChampion) return a.isChampion ? -1 : 1;
+          if (b.wins !== a.wins) return b.wins - a.wins;
+          return b.lastStep - a.lastStep;
+        })
+        .slice(0, 3);
+    }
+
+    /**
+     * Tüm testin final puanlarını, yüzdelerini ve kişiselleştirilmiş nedenlerini hesaplar.
+     */
+    function computeFinalResults() {
+      const scores = { K: 0, M: 0, N: 0 };
+      const matchups = computeStage1Bracket();
+      const top3 = getStage1Top3();
+
+      // 1. Aşama: Her galibiyetin kendi puanı
+      matchups.forEach((m) => {
+        if (m.winner) {
+          scores.K += m.winner.weights.K;
+          scores.M += m.winner.weights.M;
+          scores.N += m.winner.weights.N;
+        }
+      });
+
+      // 1. Aşama: İlk 3'e giren önceliklere ekstra ağırlık bonusu
+      const bonusMultipliers = [2.5, 1.5, 1.0];
+      top3.forEach((entry, idx) => {
+        const mult = bonusMultipliers[idx] || 1;
+        scores.K += entry.item.weights.K * mult;
+        scores.M += entry.item.weights.M * mult;
+        scores.N += entry.item.weights.N * mult;
+      });
+
+      // 2. Aşama: 30 senaryo sorusu (her biri +3 puan)
+      const stage2PickedReasons = { K: [], M: [], N: [] };
+      STAGE2_QUESTIONS.forEach((q, idx) => {
+        const ansIdx = state.stage2Answers[idx];
+        if (ansIdx !== null && q.options[ansIdx]) {
+          const opt = q.options[ansIdx];
+          scores[opt.target] += 3;
+          stage2PickedReasons[opt.target].push({
+            qId: q.id,
+            reason: opt.reason
+          });
+        }
+      });
+
+      // Yüzdeleri hesapla (toplam 100 olacak şekilde)
+      const total = scores.K + scores.M + scores.N || 1;
+      const rawPct = {
+        K: (scores.K / total) * 100,
+        M: (scores.M / total) * 100,
+        N: (scores.N / total) * 100
+      };
+
+      const ranked = ['K', 'M', 'N']
+        .map((id) => ({
+          id,
+          score: scores[id],
+          pct: Math.round(rawPct[id]),
+          info: KEYBOARDS[id]
+        }))
+        .sort((a, b) => b.score - a.score);
+
+      // Yuvarlama farkını 100'e eşitle
+      const pctSum = ranked.reduce((acc, r) => acc + r.pct, 0);
+      if (pctSum !== 100) {
+        ranked[0].pct += 100 - pctSum;
+      }
+
+      const winner = ranked[0];
+      const winnerId = winner.id;
+      const winnerName = winner.info.name;
+
+      // Kişiselleştirilmiş nedenler (1. Aşamadan 3 adet + 2. Aşamadan 3 adet)
+      const stage1Reasons = [];
+      const seenWinnerIds = new Set();
+
+      // Kazanan klavyeyi doğrudan destekleyen ikili tercihleri bul
+      const supportingMatchups = matchups
+        .filter((m) => m.winner && m.loser && m.winner.weights[winnerId] > 0 && m.winner.weights[winnerId] >= m.loser.weights[winnerId])
+        .reverse(); // Son turlardaki kritik seçimler öncelikli
+
+      for (const m of supportingMatchups) {
+        if (stage1Reasons.length >= 3) break;
+        const pairKey = `${m.winner.id}_${m.loser.id}`;
+        if (!seenWinnerIds.has(pairKey)) {
+          seenWinnerIds.add(pairKey);
+          stage1Reasons.push(
+            `«${m.loser.title}» yerine «${m.winner.title}» seçeneğini tercih ettin; bu da doğrudan ${winnerName} karakterine uyuyor.`
+          );
+        }
+      }
+
+      // 2. Aşamadan en ayırt edici 3 senaryo nedenini seç
+      const s2List = stage2PickedReasons[winnerId] || [];
+      const stage2Reasons = [];
+      if (s2List.length > 0) {
+        const step = Math.max(1, Math.floor(s2List.length / 3));
+        for (let i = 0; i < s2List.length && stage2Reasons.length < 3; i += step) {
+          stage2Reasons.push(s2List[i].reason);
+        }
+      }
+
+      return {
+        ranked,
+        winner,
+        top3,
+        reasons: [...stage1Reasons, ...stage2Reasons].slice(0, 6)
+      };
+    }
+
+    /* =========================================================================
+       4. EKRAN RENDER FONKSİYONLARI
+       ========================================================================= */
+    const appRoot = document.getElementById('appRoot');
+
+    function clearPendingAutoAdvance() {
+      if (state.autoAdvanceTimer) {
+        clearTimeout(state.autoAdvanceTimer);
+        state.autoAdvanceTimer = null;
+      }
+    }
+
+    function render() {
+      clearPendingAutoAdvance();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      if (state.screen === 'welcome') renderWelcome();
+      else if (state.screen === 'stage1') renderStage1();
+      else if (state.screen === 'transition') renderTransition();
+      else if (state.screen === 'stage2') renderStage2();
+      else if (state.screen === 'result') renderResult();
+    }
+
+    /* --- EKRAN 1: KARŞILAMA --- */
+    function renderWelcome() {
+      appRoot.innerHTML = `
+        <section class="glass-card rounded-3xl p-6 sm:p-10 md:p-12 anim-fade-up relative overflow-hidden">
+          <!-- Üst Parıltı Şeridi -->
+          <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-80"></div>
+
+          <div class="flex flex-col items-center text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-400/10 border border-cyan-400/30 text-cyan-300 text-xs sm:text-sm font-semibold tracking-wide mb-6">
+              <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+              KİŞİSELLEŞTİRİLMİŞ KÖR KLAVYE TESTİ
+            </div>
+
+            <h1 class="font-display text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight mb-5">
+              Merhaba Onur, bugünkü testte <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-teal-300 to-sky-300">hangi klavyeyi alacağına</span> karar vereceksin.
+            </h1>
+
+            <p class="text-slate-300 text-sm sm:text-base max-w-2xl leading-relaxed mb-8">
+              Marka önyargılarını bir kenara bırakıyoruz. Gerçek sahne alışkanlıkların, taşıma konforun ve müzik tarzın üzerinden senin için en doğru enstrümanı birlikte ortaya çıkaracağız.
+            </p>
+          </div>
+
+          <!-- Bilgilendirme Kartları -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            <div class="rounded-2xl bg-navy-900/70 border border-cyan-400/15 p-5">
+              <div class="flex items-center gap-3 mb-2.5">
+                <div class="w-10 h-10 rounded-xl bg-cyan-400/15 text-cyan-300 flex items-center justify-center shrink-0">
+                  ${getIconSvg('trophy', 'w-5 h-5')}
+                </div>
+                <h2 class="font-display font-bold text-white text-base sm:text-lg">1. Aşama: Öncelik Turnuvası</h2>
+              </div>
+              <p class="text-slate-300/90 text-sm leading-relaxed">
+                "O mu, Bu mu?" formatında 16 kriter ikişer ikişer karşına çıkacak. Hangisi senin için daha önemliyse onu seçeceksin; kazanan ekranda kalacak, karşısına yeni rakip gelecek (15 eşleşme).
+              </p>
+            </div>
+
+            <div class="rounded-2xl bg-navy-900/70 border border-cyan-400/15 p-5">
+              <div class="flex items-center gap-3 mb-2.5">
+                <div class="w-10 h-10 rounded-xl bg-teal-400/15 text-teal-300 flex items-center justify-center shrink-0">
+                  ${getIconSvg('sparkles', 'w-5 h-5')}
+                </div>
+                <h2 class="font-display font-bold text-white text-base sm:text-lg">2. Aşama: Sahne Senaryoları</h2>
+              </div>
+              <p class="text-slate-300/90 text-sm leading-relaxed">
+                30 adet kör senaryo sorusuyla gerçek sahne reflekslerini, tuşe beklentini ve pratik tercihlerini ölçeceğiz. Dilediğin zaman önceki sorulara dönüp cevabını değiştirebilirsin.
+              </p>
+            </div>
+          </div>
+
+          <div class="rounded-2xl bg-gradient-to-r from-cyan-500/10 via-teal-500/10 to-cyan-500/10 border border-cyan-400/25 p-4 sm:p-5 mb-8 text-sm text-cyan-100/90 flex items-start gap-3">
+            <div class="text-cyan-300 mt-0.5 shrink-0">
+              ${getIconSvg('shield', 'w-5 h-5')}
+            </div>
+            <p class="leading-relaxed">
+              <strong class="text-white">Tamamen Kör Test:</strong> Hiçbir aşamada klavye markaları veya modelleri belli edilmeyecek. Finalde tüm tercihlerinin nedenleriyle birlikte (<em>"Şunu buna tercih ettin, o yüzden bu..."</em>) en yüksek skoru alan klavye açıklanacak!
+            </p>
+          </div>
+
+          <div class="flex justify-center">
+            <button id="startBtn" class="btn-turq pulse-glow w-full sm:w-auto px-10 py-4 rounded-2xl font-display font-bold text-base sm:text-lg flex items-center justify-center gap-2.5 cursor-pointer">
+              <span>Devam Et</span>
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </button>
+          </div>
+        </section>
+      `;
+
+      document.getElementById('startBtn').addEventListener('click', () => {
+        state.navDir = 'next';
+        state.screen = 'stage1';
+        render();
+      });
+    }
+
+    /* --- EKRAN 2: 1. AŞAMA (O MU, BU MU? TURNUVASI) --- */
+    function renderStage1() {
+      const matchups = computeStage1Bracket();
+      const totalMatchups = STAGE1_CRITERIA.length - 1; // 15
+      const currentMatch = matchups[state.stage1Index];
+
+      if (!currentMatch) {
+        state.stage1Index = Math.max(0, matchups.length - 1);
+        renderStage1();
+        return;
+      }
+
+      const progressPct = Math.round(((state.stage1Index + 1) / totalMatchups) * 100);
+      const animClass = state.navDir === 'prev' ? 'anim-slide-prev' : 'anim-slide-next';
+      const isLeftSelected = currentMatch.choice === 'left';
+      const isRightSelected = currentMatch.choice === 'right';
+      const canGoNext = currentMatch.choice !== null;
+      const isLastMatch = state.stage1Index === totalMatchups - 1;
+
+      appRoot.innerHTML = `
+        <section class="glass-card rounded-3xl p-5 sm:p-8 md:p-10 relative overflow-hidden">
+          <!-- Üst Bar: Aşama, Eşleşme Numarası ve İlerleme Çubuğu -->
+          <div class="mb-7">
+            <div class="flex items-center justify-between gap-2 text-xs sm:text-sm font-semibold mb-3">
+              <span class="text-cyan-300 tracking-wide uppercase">1. Aşama: Öncelik Turnuvası</span>
+              <span class="px-3 py-1 rounded-full bg-cyan-400/15 border border-cyan-400/30 text-cyan-200">
+                Eşleşme ${state.stage1Index + 1} / ${totalMatchups}
+              </span>
+            </div>
+            <div class="w-full h-2.5 bg-navy-950/80 rounded-full overflow-hidden border border-cyan-400/15">
+              <div class="h-full bg-gradient-to-r from-cyan-400 to-teal-400 rounded-full transition-all duration-500 ease-out shadow-[0_0_12px_rgba(0,229,255,0.6)]" style="width: ${progressPct}%"></div>
+            </div>
+          </div>
+
+          <!-- Soru Başlığı ve Kartlar -->
+          <div class="${animClass}">
+            <div class="text-center mb-7">
+              <h2 class="font-display text-xl sm:text-3xl font-extrabold text-white mb-2">
+                Senin için hangisi daha önemli?
+              </h2>
+              <p class="text-slate-400 text-xs sm:text-sm">
+                Seçtiğin özellik ekranda kalacak ve bir sonraki rakiple yarışacak.
+              </p>
+            </div>
+
+            <div class="relative grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-stretch mb-8">
+              <!-- SOL KART (Şampiyon / 1. Seçenek) -->
+              <button type="button" id="cardLeft" class="choice-card ${isLeftSelected ? 'selected' : ''} rounded-2xl p-6 sm:p-8 text-left flex flex-col justify-between cursor-pointer group">
+                <div>
+                  <div class="flex items-center justify-between gap-2 mb-5">
+                    <div class="w-14 h-14 rounded-2xl bg-cyan-400/15 border border-cyan-400/30 text-cyan-300 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      ${getIconSvg(currentMatch.left.icon, 'w-7 h-7')}
+                    </div>
+                    ${state.stage1Index > 0
+                      ? `<span class="px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-amber-400/15 text-amber-300 border border-amber-400/30">Mevcut Şampiyon</span>`
+                      : `<span class="px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-cyan-400/10 text-cyan-300 border border-cyan-400/20">Seçenek 1</span>`
+                    }
+                  </div>
+                  <h3 class="font-display text-lg sm:text-2xl font-bold text-white leading-snug mb-2">
+                    ${currentMatch.left.title}
+                  </h3>
+                  <p class="text-slate-300/90 text-sm sm:text-base leading-relaxed">
+                    ${currentMatch.left.subtitle}
+                  </p>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs font-semibold ${isLeftSelected ? 'text-cyan-300' : 'text-slate-400 group-hover:text-cyan-300'}">
+                  <span>${isLeftSelected ? 'Seçildi' : 'Bunu Tercih Et'}</span>
+                  <span class="w-6 h-6 rounded-full border ${isLeftSelected ? 'bg-cyan-400 border-cyan-400 text-navy-950' : 'border-slate-500'} flex items-center justify-center">
+                    ${isLeftSelected ? getIconSvg('check', 'w-4 h-4') : ''}
+                  </span>
+                </div>
+              </button>
+
+              <!-- VS Rozeti -->
+              <div class="hidden md:flex items-center justify-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none">
+                <div class="w-12 h-12 rounded-full bg-navy-900 border-2 border-cyan-400/60 shadow-[0_0_20px_rgba(0,229,255,0.45)] flex items-center justify-center font-display font-extrabold text-xs text-cyan-300 tracking-wider">
+                  VS
+                </div>
+              </div>
+
+              <!-- SAĞ KART (Yeni Rakip / 2. Seçenek) -->
+              <button type="button" id="cardRight" class="choice-card ${isRightSelected ? 'selected' : ''} rounded-2xl p-6 sm:p-8 text-left flex flex-col justify-between cursor-pointer group">
+                <div>
+                  <div class="flex items-center justify-between gap-2 mb-5">
+                    <div class="w-14 h-14 rounded-2xl bg-teal-400/15 border border-teal-400/30 text-teal-300 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      ${getIconSvg(currentMatch.right.icon, 'w-7 h-7')}
+                    </div>
+                    <span class="px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-teal-400/15 text-teal-300 border border-teal-400/30">
+                      ${state.stage1Index > 0 ? 'Yeni Rakip' : 'Seçenek 2'}
+                    </span>
+                  </div>
+                  <h3 class="font-display text-lg sm:text-2xl font-bold text-white leading-snug mb-2">
+                    ${currentMatch.right.title}
+                  </h3>
+                  <p class="text-slate-300/90 text-sm sm:text-base leading-relaxed">
+                    ${currentMatch.right.subtitle}
+                  </p>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs font-semibold ${isRightSelected ? 'text-cyan-300' : 'text-slate-400 group-hover:text-cyan-300'}">
+                  <span>${isRightSelected ? 'Seçildi' : 'Bunu Tercih Et'}</span>
+                  <span class="w-6 h-6 rounded-full border ${isRightSelected ? 'bg-cyan-400 border-cyan-400 text-navy-950' : 'border-slate-500'} flex items-center justify-center">
+                    ${isRightSelected ? getIconSvg('check', 'w-4 h-4') : ''}
+                  </span>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Alt Navigasyon -->
+          <div class="flex items-center justify-between gap-3 pt-4 border-t border-white/10">
+            <button type="button" id="s1PrevBtn" class="btn-ghost px-4 sm:px-6 py-3 rounded-xl font-semibold text-sm flex items-center gap-2 cursor-pointer" ${state.stage1Index === 0 ? 'disabled' : ''}>
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+              <span>Önceki Soru</span>
+            </button>
+
+            <button type="button" id="s1NextBtn" class="btn-turq px-5 sm:px-7 py-3 rounded-xl font-bold text-sm flex items-center gap-2 cursor-pointer" ${!canGoNext ? 'disabled' : ''}>
+              <span>${isLastMatch ? '1. Aşamayı Bitir' : 'Sonraki Soru'}</span>
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </section>
+      `;
+
+      const handleStage1Pick = (side) => {
+        clearPendingAutoAdvance();
+        const prevChoice = state.stage1Choices[state.stage1Index];
+        state.stage1Choices[state.stage1Index] = side;
+
+        // Eğer kullanıcı geri dönüp önceki seçimini değiştirdiyse, sonraki rakipler değişeceği için sonraki seçimleri temizle
+        if (prevChoice !== null && prevChoice !== side) {
+          for (let j = state.stage1Index + 1; j < state.stage1Choices.length; j++) {
+            state.stage1Choices[j] = null;
+          }
+        }
+
+        // Görsel seçim vurgusunu anında göster
+        document.getElementById('cardLeft').classList.toggle('selected', side === 'left');
+        document.getElementById('cardRight').classList.toggle('selected', side === 'right');
+        document.getElementById('s1NextBtn').disabled = false;
+
+        // Kısa bir parlama sonrası otomatik ilerle
+        state.autoAdvanceTimer = setTimeout(() => {
+          state.navDir = 'next';
+          if (state.stage1Index < totalMatchups - 1) {
+            state.stage1Index += 1;
+            renderStage1();
+          } else {
+            state.screen = 'transition';
+            render();
+          }
+        }, 300);
+      };
+
+      document.getElementById('cardLeft').addEventListener('click', () => handleStage1Pick('left'));
+      document.getElementById('cardRight').addEventListener('click', () => handleStage1Pick('right'));
+
+      document.getElementById('s1PrevBtn').addEventListener('click', () => {
+        if (state.stage1Index > 0) {
+          state.navDir = 'prev';
+          state.stage1Index -= 1;
+          renderStage1();
+        }
+      });
+
+      document.getElementById('s1NextBtn').addEventListener('click', () => {
+        if (state.stage1Choices[state.stage1Index] !== null) {
+          state.navDir = 'next';
+          if (state.stage1Index < totalMatchups - 1) {
+            state.stage1Index += 1;
+            renderStage1();
+          } else {
+            state.screen = 'transition';
+            render();
+          }
+        }
+      });
+    }
+
+    /* --- EKRAN 3: AŞAMA GEÇİŞ EKRANI --- */
+    function renderTransition() {
+      const top3 = getStage1Top3();
+      const rankLabels = ['1. Önceliğin (Şampiyon)', '2. Önceliğin', '3. Önceliğin'];
+
+      appRoot.innerHTML = `
+        <section class="glass-card rounded-3xl p-6 sm:p-10 md:p-12 text-center anim-fade-up relative overflow-hidden">
+          <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-teal-400 to-transparent"></div>
+
+          <div class="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-cyan-400/20 to-teal-400/20 border border-cyan-400/40 text-cyan-300 flex items-center justify-center shadow-[0_0_25px_rgba(0,229,255,0.3)]">
+            ${getIconSvg('trophy', 'w-8 h-8')}
+          </div>
+
+          <h2 class="font-display text-2xl sm:text-4xl font-extrabold text-white mb-3">
+            Tebrikler Onur, ilk aşamayı tamamladın!
+          </h2>
+
+          <p class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed mb-8">
+            Öncelik haritanı çıkardık. Şimdi ikinci aşamaya geçiyoruz: <strong class="text-cyan-300">30 soruluk sahne ve kullanım senaryoları.</strong>
+          </p>
+
+          <!-- İlk 3 Öncelik Rozetleri (Klavye isimleri gizli) -->
+          <div class="mb-9">
+            <p class="text-xs font-semibold uppercase tracking-widest text-cyan-300/80 mb-4">
+              1. Aşama Öne Çıkan 3 Önceliğin
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-left">
+              ${top3.map((entry, idx) => `
+                <div class="rounded-2xl bg-navy-900/75 border ${idx === 0 ? 'border-cyan-400/60 shadow-[0_0_20px_rgba(0,229,255,0.2)]' : 'border-cyan-400/20'} p-4 flex flex-col gap-2">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[11px] font-bold uppercase tracking-wider ${idx === 0 ? 'text-cyan-300' : 'text-teal-300/80'}">${rankLabels[idx]}</span>
+                    <span class="text-cyan-300">${getIconSvg(entry.item.icon, 'w-5 h-5')}</span>
+                  </div>
+                  <div class="font-display font-bold text-white text-sm sm:text-base leading-snug">
+                    ${entry.item.title}
+                  </div>
+                  <div class="text-xs text-slate-400">
+                    ${entry.item.subtitle}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <button type="button" id="backToS1Btn" class="btn-ghost w-full sm:w-auto px-6 py-3.5 rounded-2xl font-semibold text-sm cursor-pointer">
+              1. Aşamayı Gözden Geçir
+            </button>
+            <button type="button" id="goStage2Btn" class="btn-turq pulse-glow w-full sm:w-auto px-9 py-4 rounded-2xl font-display font-bold text-base flex items-center justify-center gap-2 cursor-pointer">
+              <span>2. Aşamaya Geç</span>
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+            </button>
+          </div>
+        </section>
+      `;
+
+      document.getElementById('backToS1Btn').addEventListener('click', () => {
+        state.navDir = 'prev';
+        state.screen = 'stage1';
+        render();
+      });
+
+      document.getElementById('goStage2Btn').addEventListener('click', () => {
+        state.navDir = 'next';
+        state.screen = 'stage2';
+        render();
+      });
+    }
+
+    /* --- EKRAN 4: 2. AŞAMA (30 KÖR SENARYO SORUSU) --- */
+    function renderStage2() {
+      const totalQ = STAGE2_QUESTIONS.length; // 30
+      const q = STAGE2_QUESTIONS[state.stage2Index];
+      const selectedIdx = state.stage2Answers[state.stage2Index];
+      const progressPct = Math.round(((state.stage2Index + 1) / totalQ) * 100);
+      const animClass = state.navDir === 'prev' ? 'anim-slide-prev' : 'anim-slide-next';
+      const isLastQ = state.stage2Index === totalQ - 1;
+
+      appRoot.innerHTML = `
+        <section class="glass-card rounded-3xl p-5 sm:p-8 md:p-10 relative overflow-hidden">
+          <!-- Üst Bar -->
+          <div class="mb-7">
+            <div class="flex items-center justify-between gap-2 text-xs sm:text-sm font-semibold mb-3">
+              <span class="text-cyan-300 tracking-wide uppercase">2. Aşama: Sahne Senaryoları</span>
+              <span class="px-3 py-1 rounded-full bg-cyan-400/15 border border-cyan-400/30 text-cyan-200">
+                Soru ${state.stage2Index + 1} / ${totalQ}
+              </span>
+            </div>
+            <div class="w-full h-2.5 bg-navy-950/80 rounded-full overflow-hidden border border-cyan-400/15">
+              <div class="h-full bg-gradient-to-r from-cyan-400 to-teal-400 rounded-full transition-all duration-500 ease-out shadow-[0_0_12px_rgba(0,229,255,0.6)]" style="width: ${progressPct}%"></div>
+            </div>
+          </div>
+
+          <!-- Soru & Seçenekler -->
+          <div class="${animClass}">
+            <h2 class="font-display text-lg sm:text-2xl md:text-[26px] font-bold text-white leading-snug mb-6">
+              ${q.text}
+            </h2>
+
+            <div class="flex flex-col gap-3.5 mb-8" id="optionsWrap">
+              ${q.options.map((opt, idx) => {
+                const isSel = selectedIdx === idx;
+                return `
+                  <button type="button" data-idx="${idx}" class="choice-card ${isSel ? 'selected' : ''} w-full rounded-2xl p-4 sm:p-5 text-left flex items-start gap-4 cursor-pointer group">
+                    <span class="w-9 h-9 rounded-xl shrink-0 flex items-center justify-center font-display font-bold text-sm transition-colors ${isSel ? 'bg-cyan-400 text-navy-950' : 'bg-cyan-400/10 border border-cyan-400/30 text-cyan-300 group-hover:bg-cyan-400/20'}">
+                      ${opt.key}
+                    </span>
+                    <span class="text-slate-100 text-sm sm:text-base leading-relaxed pt-1 flex-1">
+                      ${opt.text}
+                    </span>
+                    <span class="w-6 h-6 mt-1.5 rounded-full shrink-0 border flex items-center justify-center ${isSel ? 'bg-cyan-400 border-cyan-400 text-navy-950' : 'border-slate-600'}">
+                      ${isSel ? getIconSvg('check', 'w-4 h-4') : ''}
+                    </span>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          </div>
+
+          <!-- Alt Navigasyon -->
+          <div class="flex items-center justify-between gap-3 pt-4 border-t border-white/10">
+            <button type="button" id="s2PrevBtn" class="btn-ghost px-4 sm:px-6 py-3 rounded-xl font-semibold text-sm flex items-center gap-2 cursor-pointer">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+              <span>Önceki Soru</span>
+            </button>
+
+            <button type="button" id="s2NextBtn" class="btn-turq ${isLastQ && selectedIdx !== null ? 'pulse-glow' : ''} px-5 sm:px-7 py-3 rounded-xl font-bold text-sm flex items-center gap-2 cursor-pointer" ${selectedIdx === null ? 'disabled' : ''}>
+              <span>${isLastQ ? 'Sonucu Gör' : 'Sonraki Soru'}</span>
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </section>
+      `;
+
+      const optionButtons = appRoot.querySelectorAll('#optionsWrap button');
+      optionButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          clearPendingAutoAdvance();
+          const chosen = Number(btn.getAttribute('data-idx'));
+          state.stage2Answers[state.stage2Index] = chosen;
+
+          // Anlık görsel güncelleme
+          optionButtons.forEach((b, i) => {
+            b.classList.toggle('selected', i === chosen);
+          });
+          const nextBtn = document.getElementById('s2NextBtn');
+          nextBtn.disabled = false;
+
+          if (!isLastQ) {
+            state.autoAdvanceTimer = setTimeout(() => {
+              state.navDir = 'next';
+              state.stage2Index += 1;
+              renderStage2();
+            }, 300);
+          } else {
+            nextBtn.classList.add('pulse-glow');
+          }
+        });
+      });
+
+      document.getElementById('s2PrevBtn').addEventListener('click', () => {
+        state.navDir = 'prev';
+        if (state.stage2Index > 0) {
+          state.stage2Index -= 1;
+          renderStage2();
+        } else {
+          state.screen = 'transition';
+          render();
+        }
+      });
+
+      document.getElementById('s2NextBtn').addEventListener('click', () => {
+        if (state.stage2Answers[state.stage2Index] !== null) {
+          state.navDir = 'next';
+          if (!isLastQ) {
+            state.stage2Index += 1;
+            renderStage2();
+          } else {
+            state.screen = 'result';
+            render();
+          }
+        }
+      });
+    }
+
+    /* --- EKRAN 5: FİNAL KUTLAMA VE SONUÇ EKRANI --- */
+    function renderResult() {
+      const { ranked, winner, reasons } = computeFinalResults();
+      const wInfo = winner.info;
+
+      // Kutlama konfetisini başlat
+      triggerConfettiBurst();
+
+      appRoot.innerHTML = `
+        <div class="space-y-6 anim-fade-up">
+          <!-- Büyük Açıklama & Kazanan Kartı -->
+          <section class="glass-card rounded-3xl p-6 sm:p-10 relative overflow-hidden text-center">
+            <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-cyan-400 via-amber-300 to-teal-400"></div>
+
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-400/15 border border-amber-300/40 text-amber-200 text-xs sm:text-sm font-bold tracking-wider uppercase mb-5">
+              ${getIconSvg('trophy', 'w-4 h-4')}
+              <span>KAZANAN KLAVYE AÇIKLANDI</span>
+            </div>
+
+            <h1 class="font-display text-2xl sm:text-4xl md:text-5xl font-extrabold text-white leading-tight mb-3">
+              Sen <span class="text-transparent bg-clip-text bg-gradient-to-r ${wInfo.accent}">${wInfo.name}</span> insanısın!
+            </h1>
+            <p class="font-display text-lg sm:text-2xl font-bold text-cyan-200 mb-2">
+              Şimdiden hayırlı olsun!
+            </p>
+            <p class="text-slate-300 text-sm sm:text-base max-w-xl mx-auto mb-7">
+              ${wInfo.tagline} — Tüm öncelik ve sahne reflekslerinle <strong class="text-white">%${winner.pct}</strong> oranında bu enstrümanla eşleştin.
+            </p>
+
+            <!-- Kazanan İlan Özet Kartı -->
+            <div class="rounded-2xl bg-navy-900/80 border border-cyan-400/30 p-5 sm:p-6 text-left max-w-3xl mx-auto">
+              <div class="flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b border-white/10">
+                <div>
+                  <div class="text-xs uppercase tracking-wider text-cyan-300 font-semibold">Öne Çıkan İlan Özeti</div>
+                  <div class="font-display text-xl sm:text-2xl font-extrabold text-white">${wInfo.shortName}</div>
+                </div>
+                <div class="px-4 py-2 rounded-xl bg-cyan-400/15 border border-cyan-400/40 text-cyan-200 font-display font-extrabold text-lg">
+                  ${wInfo.price}
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm mb-5">
+                <div class="rounded-xl bg-white/5 p-3">
+                  <span class="text-slate-400 block text-xs mb-0.5">Konum & Teslimat</span>
+                  <span class="text-slate-100 font-medium">${wInfo.location}</span>
+                </div>
+                <div class="rounded-xl bg-white/5 p-3">
+                  <span class="text-slate-400 block text-xs mb-0.5">Tuşe & Ağırlık</span>
+                  <span class="text-slate-100 font-medium">${wInfo.keybed} • ${wInfo.weight}</span>
+                </div>
+                <div class="rounded-xl bg-white/5 p-3 sm:col-span-2">
+                  <span class="text-slate-400 block text-xs mb-0.5">Dahil Aksesuarlar & Ekstralar</span>
+                  <span class="text-slate-100 font-medium">${wInfo.extras}</span>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <h4 class="font-semibold text-teal-300 mb-2 flex items-center gap-1.5">
+                    <span>✓</span> Neden Harika?
+                  </h4>
+                  <ul class="space-y-1.5 text-slate-300">
+                    ${wInfo.pros.map((p) => `<li class="flex items-start gap-2"><span class="text-teal-400 mt-1">•</span><span>${p}</span></li>`).join('')}
+                  </ul>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-amber-300 mb-2 flex items-center gap-1.5">
+                    <span>!</span> Dikkat Etmen Gerekenler
+                  </h4>
+                  <ul class="space-y-1.5 text-slate-300">
+                    ${wInfo.watchouts.map((w) => `<li class="flex items-start gap-2"><span class="text-amber-400 mt-1">•</span><span>${w}</span></li>`).join('')}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3 Adayın Yüzdelik Uyum Barları -->
+          <section class="glass-card rounded-3xl p-6 sm:p-8">
+            <h2 class="font-display text-lg sm:text-xl font-bold text-white mb-5">
+              3 Klavye Adayıyla Uyum Yüzdelerin
+            </h2>
+            <div class="space-y-4">
+              ${ranked.map((item, idx) => `
+                <div class="rounded-2xl bg-navy-900/70 border ${idx === 0 ? 'border-cyan-400/50' : 'border-white/10'} p-4">
+                  <div class="flex items-center justify-between gap-2 mb-2">
+                    <div class="flex items-center gap-2.5">
+                      <span class="w-7 h-7 rounded-lg ${idx === 0 ? 'bg-cyan-400 text-navy-950' : 'bg-white/10 text-slate-300'} font-display font-bold text-xs flex items-center justify-center">
+                        #${idx + 1}
+                      </span>
+                      <div>
+                        <div class="font-display font-bold text-white text-sm sm:text-base">${item.info.shortName}</div>
+                        <div class="text-xs text-slate-400">${item.info.price} • ${item.info.weight}</div>
+                      </div>
+                    </div>
+                    <div class="font-display font-extrabold text-lg sm:text-xl ${idx === 0 ? 'text-cyan-300' : 'text-slate-300'}">
+                      %${item.pct}
+                    </div>
+                  </div>
+                  <div class="w-full h-3 bg-navy-950 rounded-full overflow-hidden">
+                    <div class="h-full rounded-full transition-all duration-1000 ease-out bg-gradient-to-r ${idx === 0 ? 'from-cyan-400 to-teal-300 shadow-[0_0_14px_rgba(0,229,255,0.6)]' : 'from-slate-500 to-slate-400'}" style="width: ${item.pct}%"></div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </section>
+
+          <!-- Kişiselleştirilmiş Nedenler ("Neden Bu Klavye?") -->
+          <section class="glass-card rounded-3xl p-6 sm:p-8">
+            <div class="flex items-center gap-3 mb-5">
+              <div class="w-10 h-10 rounded-xl bg-cyan-400/15 text-cyan-300 flex items-center justify-center">
+                ${getIconSvg('sparkles', 'w-5 h-5')}
+              </div>
+              <div>
+                <h2 class="font-display text-lg sm:text-xl font-bold text-white">Neden Bu Klavye?</h2>
+                <p class="text-xs sm:text-sm text-slate-400">Test boyunca verdiğin gerçek cevaplardan çıkarılan kişisel özetin</p>
+              </div>
+            </div>
+
+            <ul class="space-y-3">
+              ${reasons.map((r) => `
+                <li class="rounded-2xl bg-navy-900/65 border border-cyan-400/15 p-4 text-sm sm:text-base text-slate-200 flex items-start gap-3 leading-relaxed">
+                  <span class="w-6 h-6 rounded-full bg-cyan-400/20 text-cyan-300 flex items-center justify-center shrink-0 mt-0.5">
+                    ${getIconSvg('check', 'w-3.5 h-3.5')}
+                  </span>
+                  <span>${r}</span>
+                </li>
+              `).join('')}
+            </ul>
+          </section>
+
+          <!-- 3'lü Hızlı İlan Karşılaştırma Tablosu -->
+          <section class="glass-card rounded-3xl p-6 sm:p-8">
+            <h2 class="font-display text-lg sm:text-xl font-bold text-white mb-4">
+              3 İlanın Hızlı Karşılaştırması
+            </h2>
+            <div class="overflow-x-auto -mx-2 px-2">
+              <table class="w-full text-left border-collapse min-w-[600px] text-xs sm:text-sm">
+                <thead>
+                  <tr class="border-b border-cyan-400/20 text-cyan-300">
+                    <th class="py-3 pr-3 font-semibold">Özellik</th>
+                    <th class="py-3 px-3 font-semibold">Yamaha Montage 7</th>
+                    <th class="py-3 px-3 font-semibold">Korg Kronos 73</th>
+                    <th class="py-3 pl-3 font-semibold">Nord Stage 2 EX</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-white/10 text-slate-300">
+                  <tr>
+                    <td class="py-3 pr-3 font-semibold text-white">Fiyat</td>
+                    <td class="py-3 px-3">1.650 €</td>
+                    <td class="py-3 px-3">1.695 €</td>
+                    <td class="py-3 pl-3">1.800 € (+25 € kargo)</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 pr-3 font-semibold text-white">Konum</td>
+                    <td class="py-3 px-3">72184 Eutingen (Elden)</td>
+                    <td class="py-3 px-3">82327 Tutzing (Elden)</td>
+                    <td class="py-3 pl-3">81739 Münih (Elden/Kargo)</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 pr-3 font-semibold text-white">Kılıf & Ekstra</td>
+                    <td class="py-3 px-3">Kılıf yok, ekran koruyuculu</td>
+                    <td class="py-3 px-3">Hard Case, 3 GB RAM, 2. SSD</td>
+                    <td class="py-3 pl-3">Orijinal kutu, ekstra sesler</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 pr-3 font-semibold text-white">Tuşe & Ağırlık</td>
+                    <td class="py-3 px-3">76 FSX • ~17 kg</td>
+                    <td class="py-3 px-3">73 RH3 Piyano • ~20,4 kg</td>
+                    <td class="py-3 pl-3">73 Waterfall • ~9,7 kg</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 pr-3 font-semibold text-white">Öne Çıkan Güç</td>
+                    <td class="py-3 px-3">FM-X, hız, modern kasa</td>
+                    <td class="py-3 px-3">9 ses motoru, Balkan/Etno</td>
+                    <td class="py-3 pl-3">Hafiflik, anında fiziksel kontrol</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Alt Aksiyon Butonları -->
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2 pb-6">
+            <button type="button" id="celebrateAgainBtn" class="btn-ghost w-full sm:w-auto px-7 py-3.5 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2 cursor-pointer">
+              ${getIconSvg('sparkles', 'w-4 h-4')}
+              <span>Kutlamayı Tekrarla</span>
+            </button>
+            <button type="button" id="restartBtn" class="btn-turq w-full sm:w-auto px-8 py-3.5 rounded-2xl font-display font-bold text-sm sm:text-base cursor-pointer">
+              Testi Tekrar Çöz
+            </button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('celebrateAgainBtn').addEventListener('click', () => {
+        triggerConfettiBurst();
+      });
+
+      document.getElementById('restartBtn').addEventListener('click', () => {
+        state.screen = 'welcome';
+        state.navDir = 'next';
+        state.stage1Index = 0;
+        state.stage1Choices = new Array(STAGE1_CRITERIA.length - 1).fill(null);
+        state.stage2Index = 0;
+        state.stage2Answers = new Array(STAGE2_QUESTIONS.length).fill(null);
+        render();
+      });
+    }
+
+    /* =========================================================================
+       5. CANLI NAVY-TURKUAZ AURORA VE IŞILTI ARKA PLAN ANIMASYONU (CANVAS)
+       ========================================================================= */
+    const bgCanvas = document.getElementById('bgCanvas');
+    const bgCtx = bgCanvas.getContext('2d');
+    let bgWidth = 0;
+    let bgHeight = 0;
+    let sparkles = [];
+    let bgTime = 0;
+
+    function resizeCanvases() {
+      bgWidth = bgCanvas.width = window.innerWidth;
+      bgHeight = bgCanvas.height = window.innerHeight;
+
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+
+      // Ekran boyutuna göre parıltı parçacıkları oluştur
+      const count = Math.min(85, Math.max(35, Math.floor((bgWidth * bgHeight) / 18000)));
+      sparkles = Array.from({ length: count }, () => ({
+        x: Math.random() * bgWidth,
+        y: Math.random() * bgHeight,
+        r: Math.random() * 2.1 + 0.6,
+        vx: (Math.random() - 0.5) * 0.25,
+        vy: -(Math.random() * 0.35 + 0.08),
+        phase: Math.random() * Math.PI * 2,
+        speed: Math.random() * 0.025 + 0.01,
+        hue: Math.random() > 0.35 ? 186 : 168 // Turkuaz ve camgöbeği tonları
+      }));
+    }
+
+    function drawAuroraBackground() {
+      bgTime += 0.008;
+
+      // Derin Navy Blue baz gradyan
+      const baseGrad = bgCtx.createLinearGradient(0, 0, bgWidth, bgHeight);
+      baseGrad.addColorStop(0, '#040814');
+      baseGrad.addColorStop(0.5, '#071126');
+      baseGrad.addColorStop(1, '#0b1936');
+      bgCtx.fillStyle = baseGrad;
+      bgCtx.fillRect(0, 0, bgWidth, bgHeight);
+
+      // Yumuşak hareketli turkuaz/lacivert aurora bulutları
+      const orbs = [
+        {
+          x: bgWidth * (0.22 + 0.12 * Math.sin(bgTime * 0.7)),
+          y: bgHeight * (0.25 + 0.1 * Math.cos(bgTime * 0.5)),
+          r: Math.max(bgWidth, bgHeight) * 0.42,
+          color: 'rgba(0, 229, 255, 0.13)'
+        },
+        {
+          x: bgWidth * (0.78 + 0.11 * Math.cos(bgTime * 0.6)),
+          y: bgHeight * (0.72 + 0.12 * Math.sin(bgTime * 0.45)),
+          r: Math.max(bgWidth, bgHeight) * 0.45,
+          color: 'rgba(20, 184, 166, 0.14)'
+        },
+        {
+          x: bgWidth * (0.5 + 0.16 * Math.sin(bgTime * 0.4)),
+          y: bgHeight * (0.5 + 0.14 * Math.cos(bgTime * 0.65)),
+          r: Math.max(bgWidth, bgHeight) * 0.35,
+          color: 'rgba(14, 165, 233, 0.09)'
+        }
+      ];
+
+      bgCtx.save();
+      bgCtx.globalCompositeOperation = 'screen';
+      orbs.forEach((orb) => {
+        const g = bgCtx.createRadialGradient(orb.x, orb.y, 0, orb.x, orb.y, orb.r);
+        g.addColorStop(0, orb.color);
+        g.addColorStop(1, 'rgba(6, 11, 25, 0)');
+        bgCtx.fillStyle = g;
+        bgCtx.beginPath();
+        bgCtx.arc(orb.x, orb.y, orb.r, 0, Math.PI * 2);
+        bgCtx.fill();
+      });
+
+      // Akışkan ipeksi aurora dalga şeritleri
+      for (let w = 0; w < 3; w++) {
+        bgCtx.beginPath();
+        const yBase = bgHeight * (0.3 + w * 0.22);
+        for (let x = 0; x <= bgWidth; x += 24) {
+          const y =
+            yBase +
+            Math.sin(x * 0.0032 + bgTime * (1.1 + w * 0.25) + w) * 42 +
+            Math.cos(x * 0.0018 - bgTime * 0.8) * 26;
+          if (x === 0) bgCtx.moveTo(x, y);
+          else bgCtx.lineTo(x, y);
+        }
+        bgCtx.strokeStyle = w === 1 ? 'rgba(0, 229, 255, 0.09)' : 'rgba(20, 184, 166, 0.07)';
+        bgCtx.lineWidth = 2 + w;
+        bgCtx.stroke();
+      }
+      bgCtx.restore();
+
+      // Süzülen ve parıldayan yıldız/ışık tanecikleri
+      sparkles.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.phase += p.speed;
+
+        if (p.y < -10) {
+          p.y = bgHeight + 10;
+          p.x = Math.random() * bgWidth;
+        }
+        if (p.x < -10) p.x = bgWidth + 10;
+        if (p.x > bgWidth + 10) p.x = -10;
+
+        const alpha = 0.25 + 0.65 * (0.5 + 0.5 * Math.sin(p.phase));
+        bgCtx.beginPath();
+        bgCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        bgCtx.fillStyle = `hsla(${p.hue}, 100%, 75%, ${alpha})`;
+        bgCtx.shadowBlur = 10;
+        bgCtx.shadowColor = `hsla(${p.hue}, 100%, 60%, ${alpha})`;
+        bgCtx.fill();
+      });
+      bgCtx.shadowBlur = 0;
+    }
+
+    /* =========================================================================
+       6. FİNAL KUTLAMA KONFETİ VE PARILTI MOTORU
+       ========================================================================= */
+    const confettiCanvas = document.getElementById('confettiCanvas');
+    const confettiCtx = confettiCanvas.getContext('2d');
+    let confettiPieces = [];
+
+    function triggerConfettiBurst() {
+      const colors = ['#00e5ff', '#14b8a6', '#fbbf24', '#fde047', '#ffffff', '#38bdf8'];
+      const count = 130;
+
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 * Math.random());
+        const speed = Math.random() * 9 + 4;
+        confettiPieces.push({
+          x: confettiCanvas.width * (0.2 + Math.random() * 0.6),
+          y: confettiCanvas.height * (0.15 + Math.random() * 0.2),
+          vx: Math.cos(angle) * speed * 0.85,
+          vy: Math.sin(angle) * speed * 0.7 - 5,
+          size: Math.random() * 7 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * Math.PI * 2,
+          vRot: (Math.random() - 0.5) * 0.22,
+          life: 1,
+          decay: Math.random() * 0.005 + 0.004,
+          shape: Math.random() > 0.3 ? 'rect' : 'circle'
+        });
+      }
+    }
+
+    function drawConfetti() {
+      confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      if (confettiPieces.length === 0) return;
+
+      for (let i = confettiPieces.length - 1; i >= 0; i--) {
+        const c = confettiPieces[i];
+        c.x += c.vx;
+        c.y += c.vy;
+        c.vy += 0.18; // Yerçekimi
+        c.vx *= 0.99; // Hava sürtünmesi
+        c.rotation += c.vRot;
+        c.life -= c.decay;
+
+        if (c.life <= 0 || c.y > confettiCanvas.height + 30) {
+          confettiPieces.splice(i, 1);
+          continue;
+        }
+
+        confettiCtx.save();
+        confettiCtx.globalAlpha = Math.max(0, c.life);
+        confettiCtx.translate(c.x, c.y);
+        confettiCtx.rotate(c.rotation);
+        confettiCtx.fillStyle = c.color;
+
+        if (c.shape === 'rect') {
+          confettiCtx.fillRect(-c.size / 2, -c.size * 0.35, c.size, c.size * 0.7);
+        } else {
+          confettiCtx.beginPath();
+          confettiCtx.arc(0, 0, c.size * 0.45, 0, Math.PI * 2);
+          confettiCtx.fill();
+        }
+        confettiCtx.restore();
+      }
+    }
+
+    /* =========================================================================
+       7. ANA ANİMASYON DÖNGÜSÜ VE BAŞLATMA
+       ========================================================================= */
+    function animateLoop() {
+      drawAuroraBackground();
+      drawConfetti();
+      requestAnimationFrame(animateLoop);
+    }
+
+    window.addEventListener('resize', resizeCanvases);
+
+    window.onload = function () {
+      resizeCanvases();
+      render();
+      animateLoop();
+    };
+  </script>
+</body>
+</html>
